@@ -179,6 +179,7 @@ int main(int argc,char** argv){
         Q.noalias()=Q*GAMM.asDiagonal();
         
         //check for NaNs
+        
         if(Q.hasNaN()){
             std::__throw_runtime_error("Q has NaNs, clean the data");
         }
