@@ -1,1 +1,0 @@
-make: 'thread_clock.o' is up to date.

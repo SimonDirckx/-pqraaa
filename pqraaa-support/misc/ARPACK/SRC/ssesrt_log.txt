@@ -1,1 +1,0 @@
-make: 'ssesrt.o' is up to date.

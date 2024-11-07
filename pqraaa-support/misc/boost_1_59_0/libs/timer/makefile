@@ -1,3 +1,0 @@
-CXXFLAGS =    
-LDFLAGS =  
-LIBS = 

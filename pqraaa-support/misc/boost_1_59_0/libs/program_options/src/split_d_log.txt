@@ -1,1 +1,0 @@
-make: 'split_d.o' is up to date.

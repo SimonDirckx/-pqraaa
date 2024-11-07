@@ -1,1 +1,0 @@
-make: 'sneupd_c.o' is up to date.

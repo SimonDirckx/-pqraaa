@@ -1,1 +1,0 @@
-make: 'cneupd.o' is up to date.

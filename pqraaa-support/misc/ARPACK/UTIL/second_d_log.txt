@@ -1,1 +1,0 @@
-make: 'second_d.o' is up to date.

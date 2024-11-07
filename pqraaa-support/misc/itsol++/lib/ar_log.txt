@@ -1,1 +1,0 @@
-ar -r libitsol_pp.a   /home/simond/hlibpro-3.0-Ubuntu22.04/hlibpro-3.0/numerics_software/itsol++/lib/src/arms.o /home/simond/hlibpro-3.0-Ubuntu22.04/hlibpro-3.0/numerics_software/itsol++/lib/src/iluk.o /home/simond/hlibpro-3.0-Ubuntu22.04/hlibpro-3.0/numerics_software/itsol++/lib/src/ilut.o

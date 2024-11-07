@@ -1,1 +1,0 @@
-make: 'znaupd.o' is up to date.

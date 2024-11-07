@@ -1,1 +1,0 @@
-make: 'misc.o' is up to date.
