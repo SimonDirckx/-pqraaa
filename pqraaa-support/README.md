@@ -1,8 +1,8 @@
-# BEACHpack-support
+# pqraaa-support
 
 ## Description
 
-This repository contains supporting packages on which [BEACHpack](https://gitlab.kuleuven.be/numa/software/beachpack) (partly) depends. This is purely for convenience purposes to aggregate all these dependencies in one place and guarantee availability of package versions that are compatible with BEACHpack.
+This repository contains supporting packages on which [pqraaa](https://github.com/SimonDirckx/-pqraaa) (partly) depends. This is purely for convenience purposes to aggregate all these dependencies in one place and guarantee availability of package versions that are compatible with BEACHpack.
 
 ## Packages
 
@@ -14,7 +14,7 @@ For linear algebra, BEACHpack uses the C++ template library [Eigen](https://eige
 
 ### CORK++
 
-Resolving the wavenumber-dependence of the Helmholtz operators relies on the AAA algorithm implemented in the CORK++ package, located in the [*cork* folder](cork/). There is no real indication which version of CORK++ this is, as this was lost to time in the days of BEACHpack's predecessor. A seemingly more up-to-date version is available at [scm.cs.kuleuven.be/scm/git/cork](https://scm.cs.kuleuven.be/scm/git/cork) under directory *cork* and should also work just fine.
+The PQR-AAA algorithm relies on the SV-AAA algorithm implemented in the CORK++ package, located in the [*cork* folder](cork/). There is no real indication which version of CORK++ this is, as this was lost to time. A seemingly more up-to-date version is available at [scm.cs.kuleuven.be/scm/git/cork](https://scm.cs.kuleuven.be/scm/git/cork) under directory *cork* and should also work just fine.
 
 ### GLAS2
 
@@ -26,8 +26,4 @@ To be able to use BLAS and LAPACK, CORK++ and GLAS2 need bindings to them. This 
 
 ### MUMPS
 
-While normally not necessary in BEACHpack, MUMPS allows efficient operations with sparse matrices. CORK++ relies on MUMPS to support sparse matrices. We provide it in this repository under [*MUMPS_5.0.1*](MUMPS_5.0.1/) for completenesss sake.
-
-### Miscellaneous
-
-Lastly, the [*misc* folder](misc/) contains some additional packages/code/files that also resided in the early BEACHpack. However, they were not used at the time.
+While normally not necessary in PQR-AAA, MUMPS allows efficient operations with sparse matrices. CORK++ relies on MUMPS to support sparse matrices. We provide it in this repository under [*MUMPS_5.0.1*](MUMPS_5.0.1/) for completenesss sake.
