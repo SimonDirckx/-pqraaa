@@ -132,59 +132,14 @@ RUN_STRING    = "Run"
 # Define build recipes
 #
 
-### BUILD RECIPE SETS ###
-all: experiments/unfcSphereAnalysis
-
-# Clean build and binary files
 clean: clean_build clean_bin
 
-# Gather all test source files and executables
-SRC_unit 	 = $(wildcard test/unit/*.cc)
-EXE_unit 	 = $(patsubst %.cc,$(DIR_run)%,$(SRC_unit))
-SRC_perf 	 = $(wildcard test/perf/*.cc)
-EXE_perf 	 = $(patsubst %.cc,$(DIR_run)%,$(SRC_perf))
-SRC_validate = $(wildcard test/validate/*.cc)
-EXE_validate = $(patsubst %.cc,$(DIR_run)%,$(SRC_validate))
-
-# Build and run unit tests
-unit: $(EXE_unit)
-# unit: 	$(shell find $(DIR_scripts)test/unit -name '*.cc' -exec basename {} \; | sed 's/.cc//g' | sed 's/^/test\/unit\//g')
-
-# Build and run performance tests
-perf: $(EXE_perf)
-# perf: 	$(shell find $(DIR_scripts)test/perf -name '*.cc' -exec basename {} \; | sed 's/.cc//g' | sed 's/^/test\/perf\//g')
-
-# Build and run validation tests
-validate: $(EXE_validate)
-# validate: $(shell find $(DIR_scripts)test/validate -name '*.cc' -exec basename {} \; | sed 's/.cc//g' | sed 's/^/test\/validate\//g')
-
-# Build and run all tests
-test: unit perf validate
-
-# Build some examples
-example-set: examples/tutorial-1 examples/tutorial-2 examples/hmatComplexityTest examples/hmatWrapperTest examples/ilasParQRSVAAATest \
-	examples/inspectMesh examples/kmeansPerfTest examples/nearFieldQRAAA examples/perfTestSVDs examples/printSphere \
-	examples/rankRevealDecompTest examples/solveTest examples/testBIEformulations examples/testFunc examples/testNeumann \
-	examples/timeComputeKWithRecycling examples/timingsParallel examples/uhmatComplexityTest examples/unfcTestVSC examples/testTACA
-
-# Build some experiments
-experiment-set: experiments/benchmarkConstruction experiments/benchmarkMatVec experiments/buildComplexityTest experiments/perfTestACA experiments/plotGNU \
-	experiments/plotMatVec experiments/profileMatVec experiments/sphereSolveTest experiments/testSphereConstruction \
-	experiments/timingsACA experiments/UNF-meshTest experiments/unfCompression experiments/unfcSphereAnalysis
 
 ### INITIALIZATION RECIPES ###
 # Create build and bin directories
 init:
-	@mkdir -p $(DIR_build)/test/unit
-	@mkdir -p $(DIR_bin)/test/unit
-	@mkdir -p $(DIR_build)/test/perf
-	@mkdir -p $(DIR_bin)/test/perf
-	@mkdir -p $(DIR_build)/test/validate
-	@mkdir -p $(DIR_bin)/test/validate
 	@mkdir -p $(DIR_build)/examples
 	@mkdir -p $(DIR_bin)/examples
-	@mkdir -p $(DIR_build)/experiments
-	@mkdir -p $(DIR_bin)/experiments
 	@printf "%b" "$(COLOR_BLUE)build and bin directories created.$(NO_COLOR)\n";
 
 ### INDIVIDUAL RECIPES ###
@@ -193,73 +148,11 @@ examples/%: $(DIR_build)examples/%.o
 	@mkdir -p $(DIR_bin)$(dir $@)
 	@printf "%b" "$(COLOR_BLUE)$(LINK_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
 	@$(CCOMP) -o $(DIR_bin)$@ $(CFLAGS) $^ $(LFLAGS)
-
-# General experiments recipe
-experiments/%: $(DIR_build)experiments/%.o
-	@mkdir -p $(DIR_bin)$(dir $@)
-	@printf "%b" "$(COLOR_BLUE)$(LINK_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -o $(DIR_bin)$@ $(CFLAGS) $^ $(LFLAGS)
-
 # General build recipe
 $(DIR_build)%.o: $(DIR_scripts)%.cc
 	@mkdir -p $(dir $@)
 	@printf "%b" "$(COLOR_BLUE)$(COMP_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
 	@$(CCOMP) -c -o $@ $(CFLAGS) $(IFLAGS) $<
-
-
-# examples/tutorial-1: $(DIR_build)examples/tutorial-1.o
-# 	$(CCOMP) -o $(DIR_bin)$@ $(CFLAGS) $^ $(LFLAGS)
-
-# $(DIR_build)examples/tutorial-1.o: $(DIR_scripts)examples/tutorial-1.cc
-# 	$(CCOMP) -c -o $@ $(CFLAGS) $(IFLAGS) $<
-
-
-# examples/tutorial-2: $(DIR_build)examples/tutorial-2.o
-# 	$(CCOMP) -o $(DIR_bin)$@ $(CFLAGS) $^ $(LFLAGS)
-
-# $(DIR_build)examples/tutorial-2.o: $(DIR_scripts)examples/tutorial-2.cc
-# 	$(CCOMP) -c -o $@ $(CFLAGS) $(IFLAGS) $<
-
-
-### TEST RECIPES ###
-# Unit tests recipe
-$(DIR_run)test/unit/%: $(DIR_bin)test/unit/% FORCE
-	@printf "%b" "$(COLOR_BLUE)$(RUN_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$<
-
-$(DIR_bin)test/unit/%: $(DIR_build)test/unit/%.o
-	@printf "%b" "$(COLOR_BLUE)$(LINK_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -o $@ $(CFLAGS_unit) $^ $(LFLAGS)
-
-$(DIR_build)test/unit/%.o: $(DIR_scripts)test/unit/%.cc
-	@printf "%b" "$(COLOR_BLUE)$(COMP_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -c -o $@ $(CFLAGS_unit) $(IFLAGS) $<
-
-# Performance tests recipe
-$(DIR_run)test/perf/%: $(DIR_bin)test/perf/% FORCE
-	@printf "%b" "$(COLOR_BLUE)$(RUN_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$<
-
-$(DIR_bin)test/perf/%: $(DIR_build)test/perf/%.o
-	@printf "%b" "$(COLOR_BLUE)$(LINK_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -o $@ $(CFLAGS_perf) $^ $(LFLAGS)
-
-$(DIR_build)test/perf/%.o: $(DIR_scripts)test/perf/%.cc
-	@printf "%b" "$(COLOR_BLUE)$(COMP_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -c -o $@ $(CFLAGS_perf) $(IFLAGS) $<
-
-# Validation tests recipe
-$(DIR_run)test/validate/%: $(DIR_bin)test/validate/% FORCE
-	@printf "%b" "$(COLOR_BLUE)$(RUN_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$<
-
-$(DIR_bin)test/validate/%: $(DIR_build)test/validate/%.o
-	@printf "%b" "$(COLOR_BLUE)$(LINK_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -o $@ $(CFLAGS_validate) $^ $(LFLAGS)
-
-$(DIR_build)test/validate/%.o: $(DIR_scripts)test/validate/%.cc
-	@printf "%b" "$(COLOR_BLUE)$(COMP_STRING)\t$(COLOR_CYAN)$(notdir $<)$(NO_COLOR)\n";
-	@$(CCOMP) -c -o $@ $(CFLAGS_validate) $(IFLAGS) -MMD $<
 
 
 ### CLEANING RECIPES ###
