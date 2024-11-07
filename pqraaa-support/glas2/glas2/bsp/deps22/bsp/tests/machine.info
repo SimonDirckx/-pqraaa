@@ -1,0 +1,4 @@
+threads 3
+cores 3
+affinity manual
+pinning 0 0 0

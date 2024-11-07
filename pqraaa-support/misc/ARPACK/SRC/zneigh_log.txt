@@ -1,0 +1,1 @@
+make: 'zneigh.o' is up to date.

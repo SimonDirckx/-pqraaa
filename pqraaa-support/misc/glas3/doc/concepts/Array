@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta name="Karl Meerbergen" content="GLAS2 Manual">
+<title>Glas3 concepts: Array</title>
+</head>
+<body>
+<h1>Glas3 concepts: Array</h1>
+An <b>Array</b> is a concept that stores objects of the same type in a linear arrangement, but possibly indexed in a multlilinear fashion.
+<h2>Requirements</h2>
+The type <code>X</code> satisfies Array if and only if:
+<ul>
+<li><code>X</code> satisfies <a href="http://en.cppreference.com/w/cpp/concept/CopyConstructible">CopyConstructible</a>.
+</li>
+<li><code>X</code> must have the following types:
+<table border="1">
+<tr><th>name</th><th>type requirements</th><th>notes</th></tr>
+<tr><td><code>value_type</code></td><td><code>std::is_arithmetic&lt;value_type&gt;</td></tr>
+<tr><td><code>size_type</code></td><td>must be a <a href="http://en.cppreference.com/w/cpp/concept/SequenceContainer">SequenceContainer</a></td></tr>
+</table>
+<li>Given
+<ul>
+<li><code>x,y</code> of type <code>X</code>
+<li><code>s</code> of type <code>X::size_type</code>
+<li><code>i<sub>1</sub>,...,i<sub>d</sub></code> of type <code>X::size_type::value_type</code>
+</ul>
+the following expressions must be valid and have their specified effects:
+<table border="1">
+<tr><th>Expression</th><th>Return type</th><th>Semantics</th><th>conditions</th></tr>
+<tr>
+<td><code>X(y)</code></td><td><code>X</code></td>
+<td>Copy constructor: should this be deep or shallow copy?</td><td></td>
+</tr>
+<tr>
+<td><code>x.order()</code></td><td><code>X::value_type::size_type</code></td>
+<td>Return the order of <code>x</code></td>
+</tr>
+<tr>
+<td><code>x.size()</code></td><td><code>X::size_type</code></td>
+<td>Return the size of <code>x</code></td><td>x.size().size()==x.order()</td>
+</tr>
+<tr>
+<td><code>x(s)</code></td><td><code>X::value_type</code></td>
+<td>Return the element corresponding to the element with index <code>s</code></td><td><code>s</code> lies in the index range of <code>x</code></td>
+</tr>
+<tr>
+<td><code>x(i<sub>1</sub>,...,i<sub>d</sub>)</code></td><td><code>X::value_type</code></td>
+<td>Return the element corresponding to the element with indices <code>(i<sub>1</sub>,...,i<sub>d</sub>)</code></td>
+<td><code>0&ge;i<sub>j</sub>&lt;x.size()[j]</code> for <code>0&ge;j&lt;x.order()</code></td>
+</tr>
+</table>
+</li>
+</ul>
+<h2>Array in Glas3</h2>
+</body>
+</html>

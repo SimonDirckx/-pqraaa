@@ -1,0 +1,1 @@
+make: 'ssortr_d.o' is up to date.

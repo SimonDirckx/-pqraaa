@@ -1,0 +1,9 @@
+Doing 2000000 loops of square matvec() for size 10
+Sum : 1.47519e+07
+Elapsed time : 1.49281e+09
+Doing 20000 loops of square matvec() for size 100
+Sum : 1.26373e+06
+Elapsed time : 1.4518e+09
+Doing 200 loops of square matvec() for size 1000
+Sum : 132985
+Elapsed time : 2.76968e+09

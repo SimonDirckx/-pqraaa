@@ -1,0 +1,31 @@
+- simplify naming in indexing.hpp
+
+- if shallow copy would be standard, this would allow:
+  * const Array's (because return const value doesn't use move construction but copy construction): this would need && instead of const& as input parameter if Array is possibly changed
+  * multi-index-selection without the complicated use of primitive_vector_wrapper by defining a base array class for all Array types?
+
+- VERY WEIRD BUG (only when compiling with -O optimization flags): see unit test multi_index_selection_indexed_array -> seems related to issue with ownership in initializer_list... 
+  -> add multi-index selection based on container of Array's next to std::initializer_list?
+  -> add multi-index selection based on std::vector instead of std::initializer_list?
+
+- iterator for array
+
+- dense_array:
+  * performance issue: replace std::function with templates in ops.hpp
+  * scalar * array
+  * some unit tests: deep construction of all types
+  * using index in indexed_array could be done more efficiently depending on the type of index, concept of indexed_array could also depend on type of index
+
+- array_network:
+  * ttt(TensorNetwork, DenseArray) -> infinite loop during compilation????
+  * ttt(TensorNetwork, TensorNetwork) with different array_type to be implemented (using array_wrapper)
+  * ops -, *, /
+  * tile
+  * matricize, fold/unfold
+  * linear index 
+  * multi index selection
+  * some unit tests
+  * allow outer_edges to connect to different nodes -> could be helpful for hadamard product of networks with different topology
+  * allow multiple edges to connect to one dimension (for allowing matricizations)
+ 
+- tensor expressions (sum of tensor networks) -> could be helpful for hadamard sum of networks with different topology

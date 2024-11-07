@@ -1,0 +1,8 @@
+// BEACH: Include this file if lapack-clashes occur between Eigen and Boost
+#include <Eigen/Core>
+#include <BEACHpack/linalg/Eigen-alt/LU>
+#include <BEACHpack/linalg/Eigen-alt/Cholesky>
+#include <BEACHpack/linalg/Eigen-alt/QR>
+#include <BEACHpack/linalg/Eigen-alt/SVD>
+#include <BEACHpack/linalg/Eigen-alt/Geometry>
+#include <BEACHpack/linalg/Eigen-alt/Eigenvalues>

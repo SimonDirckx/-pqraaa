@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<meta name="Karl Meerbergen" content="GLAS Manual">
+<title>Glas3: Installation and build</title>
+</head>
+<body>
+<h1>GLAS3: Installation and Build</h1>
+<h2>Installation</h2>
+<p>
+GLAS3 can be downloaded from the GIT server using
+<pre>
+git clone ssh://<i>user</i>+git@repos.cs.kuleuven.be:2222/repos/glas
+</pre>
+</p><p>
+The glas repository contains a directory <code>glas3</code> which is organized as follows:
+<ul>
+<li><code>glas3</code>: contains include files for GLAS3.
+The include path of the compiler should point to the parent of this directory</li>
+<li><code>libs</code>: GLAS3 library (objective files)</li>
+<li><code>doc</code>: the documentation</li>
+<li><code>test</code>: regression tests</li>
+<li><code>perf_test</code>: performance tests</li>
+<li><code>py</code>: python scripts. Make sure your PATH contains this directory for easy use of the build system</li>
+</ul>
+</p><p>
+</p>
+<h2>Build</h2>
+For using the GLAS3 core you need to compile the GLAS3 library.
+</p>
+<p>GLAS3 depends on the following external packages:
+<ul>
+<li><a href="http://www.boost.org">Boost</a> (GLAS3 requires Boost version 1.33 or higher. At the moment there is no BOOST used!)</li>
+<li><a href="http://svn.boost.org/trac/boost/wiki/BoostSandbox">Boost-Sandbox</a> for the <code>bindings</code> and <code>lapack</code> toolboxes.
+A copy of the Boost.Sandbox is available in the glas3 distribution.
+If a local version of Boost.Sandbox is preferred, please remove the copy from your local GLAS2 version.</li>
+<li>LAPACK for the lapack toolbox</li>
+<li>BLAS for the lapack toolbox and the BLAS backend</li>
+</ul>
+</p>
+For building the regression tests, the easiest is to use the GLAS build system.
+<h3>Compiler options</h3>
+For building your application, you can use any compiler.
+Make sure that the compiler options for the include file directory for Boost and GLAS2
+are set.
+<h3>The GLAS build system</h3>
+A build system has been set up for posix systems using make.
+This is based on python and can be found in the directory
+<code>py</code> of the repository.
+The following python scripts are available:
+<ul>
+<li><code>clean_up.py</code>: removed object and executable files</li>
+<li><code>gen_make.py</code>: generates makefiles in test, perf_test and libs directories</li>
+<li><code>make.py</code>: compile the libraries and compile and link the test and perf_test programs.</li>
+<li>In the directory <code>test</code>, the script <code>validate.py</code> runs the regression tests and
+makes the report <code>report.html</code>.</li>
+<li>In the directory <code>perf_test</code>, the script <code>run.py</code> runs the performance tests.
+This scrip can also be run in the subdirectories of <code>perf_test</code>.</li>
+<li>In the directory <code>perf_test</code>, the script <code>report.py</code> makes the performance report <code>report.html</code>.</li>
+</ul>
+<p>
+In order to build, the file <code>glas_build_init.py</code> should be created in your home directory.
+This file contains the information about the compiler and the libraries required for compiling and linking.
+An example can be found
+<a href="build/glas_build_init.html">here</a> (for download use <a href="build/glas_build_init.py">glas_built_init.py</a>).
+</p>
+<h3>Building your own application using the GLAS build system</h3>
+In order to use the build system, each directory where you want to build should have a file named <code>glas_build.py</code> containing
+python commands for telling what should be done in this directory.
+The following information should be set in this file:
+<ul>
+<li><code>build = 'exe' | 'lib' | 'ar_lib'</code>
+where
+<ul>
+<li>build='exe': is meant for executables</li>
+<li>build='lib': is meant for a library, i.e. no executables are built, files are compiled in debug and release</li>
+<li>build='ar_lib': is the same as 'lib' with in addition, the creation of a lib archive.
+In this case, the variable <code>libname</code> should be set also, e.g.
+<pre style="background: lightgray">
+build = 'ar_lib'
+libname = 'glas_mylib'
+</pre></li>
+</ul>
+<li><code>variant</code> is a list of strings with the following possible values: <code>'debug'</code>, <code>'release'</code> and <code>'profile'</code>
+to indicate whether we compile in release, debug, or profile modes.
+Currently, 'profile' is not available.
+<li><code>libname</code>: is required for <code>build='lib'|'ar_lib'</code>. The library generated is <code>libname</code>.a for a release library,
+<code>libname</code>_d.a for a debug library and <code>libname</code>_p.a for a profile library.
+<li><code>dependencies</code> contains the list of dependencies. The GLAS library has already been added.
+</ul>
+Other dependencies can be added as follows, e.g.:
+<pre style="background: lightgray">
+build = 'lib'
+variant = ['debug','release']
+libname = 'libglas_lapack'
+dependencies += boost_bindings
+dependencies += lapack
+</pre>
+where <code>boost_sandbox</code> and <code>lapack</code> are defined in
+<code>$HOME/glas_build_init.py</code>.
+<h2>Configuring the build system</h2>
+The file <code>$HOME/glas_build_init.py</code> will be consulted by the python scripts for generating the
+makefiles and building the libraries and executable.
+This file consists of a number of libraries and compiler options.
+The following libraries should be defined for compiling all of GLAS2:
+<ul>
+<li>blas, lapack, and mumps for the bindings tests.</li>
+<li>glas3: GLAS3 itself is also a library</li>
+</ul>
+As an example, we show a minimal <code>$HOME/glas_build_init.py</code> that allows you to compile
+the regression tests in <tt>test/backend/glas</tt>.
+<pre style="background: lightgray">
+import os
+home = os.getenv( 'HOME' )
+
+boost = glas_buildsystem.library()
+boost.include_path = ['/usr/include']
+
+glas3 = glas_buildsystem.library()
+glas3.include_path = [home+'/glas3']
+glas3.library = '-L'+home+'/glas3/libs/ -lglas3'
+
+# GLAS uses Boost, so we add this dependency
+glas3 += boost
+
+# We also tell the system that changes in the GLAS3 files require recompilation of the files that
+# depend on the modified files. By default, this variable is False.
+glas3.check_modif = True
+</pre>
+</body>
+</html>

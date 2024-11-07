@@ -1,0 +1,67 @@
+2
+'SAMPLE_MATRICES/dwg961b.cua' 'dwg961b' 
+'SAMPLE_MATRICES/qc324.cua'  'qc324' 
+
+
+
+
+8
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n10_dirichlet_deg1.coo' 'k10_n10_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n10_neumann_deg1.coo' 'k10_n10_neu_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n5_dirichlet_deg1.coo' 'k10_n5_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n5_neumann_deg1.coo' 'k10_n5_neu_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n5_neumann_deg2.coo' 'k10_n5_neu_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n10_dirichlet_deg2.coo' 'k10_n10_dir_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n10_neumann_deg2.coo' 'k10_n10_neu_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k10_n5_dirichlet_deg2.coo' 'k10_n5_dir_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_dirichlet_deg1.coo' 'k50_n10_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_dirichlet_deg2.coo' 'k50_n10_dir_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_neumann_deg1.coo' 'k50_n10_neu_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_dirichlet_deg1.coo' 'k50_n5_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_neumann_deg1.coo' 'k50_n5_neu_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_neumann_deg2.coo' 'k50_n10_neu_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_dirichlet_deg2.coo' 'k50_n5_dir_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_neumann_deg2.coo' 'k50_n5_neu_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k100_n10_dirichlet_deg1.coo' 'k100_n10_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k100_n5_dirichlet_deg1.coo' 'k100_n5_dir'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k100_n5_neumann_deg1.coo' 'K100_n5_neu'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k100_n10_neumann_deg1.coo' 'k100_n10_neu_deg1.coo'
+
+1
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_dirichlet_deg2.coo' 'k50_n5_dir_deg2.coo'
+
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_dirichlet_deg1.coo' 'k50_n10_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_dirichlet_deg2.coo' 'k50_n10_dir_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_neumann_deg1.coo' 'k50_n10_neu_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_dirichlet_deg1.coo' 'k50_n5_dir_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_neumann_deg1.coo' 'k50_n5_neu_deg1.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n10_neumann_deg2.coo' 'k50_n10_neu_deg2.coo'
+'/scratch/massinissa01/dosei/CIRCLE/circle_k50_n5_dirichlet_deg2.coo' 'k50_n5_dir_deg2.coo'
+
+
+
+
+
+
+'./MATRICES/k50dir.mtx' 'k50dir'
+'./MATRICES/k50neu.mtx' 'k50neu'
+'./MATRICES/test.mtx' 'test'
+'./MATRICES/cmp.mtx' 'cmp'
+'./MATRICES/acoustic.cua' 'acoustic.cua'
+'./MATRICES/cmat.cua' 'cmat.cua'
+'./MATRICES/matrix_circle_dir_k50_n10_p1' 'matrix_circle_dir_k50_n10_p1'
+'./MATRICES/acoustic.cua' 'acoustic.cua'
+'./MATRICES/dwg961b.cua' 'dwg961b.cua'
+'./MATRICES/mhd1280a.cua' 'mhd1280a.cua'
+'./MATRICES/mhd1280b.cua' 'mhd1280b.cua'
+'./MATRICES/qc2534.cua' 'qc2534.cua'
+'./MATRICES/qc324.cua' 'qc324.cua'
+
+first line is the number of matrices to be tested  [called numat in drivers] 
+ 
+The second line gives the full path name of the file
+and the name of the file, this may be something like
+'/project/scicom00/DATA/MATRICES/MATRICES/SIMON/RAEFSKY6' 'RAEFSKY6'
+the name is printed in the output table
+
+Repeat for as many matrices as indicated by numat

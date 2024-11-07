@@ -1,0 +1,46 @@
+
+**NOTE** ILUC has been temporarily removed for a fix
+
++======================================================================+
+|--------------- Complex Iterative Solvers Package --------------------|
++======================================================================+
+
+This is  part of  the ITSOL extention  to the SPARSKIT  package.  This
+particular  sub-package provides  preconditioners for  solving general
+sparse * complex-valued * linear systems of equations.
+
+Once you  have unpacked the tar  ball -- go to  the ZITSOL_1 directory
+and edit  the file 'makefile' for customizing  the loaders, compilers,
+compiler flags, etc ... then type
+
+make lib
+
+to create the library libzitsol.a
+
+Once this is  done you can try some of the  test examples in TESTS_COO
+or TESTS_HB. You can for example go to TESTS_COO and type
+
+ make all
+
+ which will make the executables :
+	        zarms.ex, zilut.ex, ziluc.ex (**removed), and ziluk.ex
+
+ then you can execute the script 
+ 
+ runall to run all these drivers with the two sample matrices provided
+ in ./SAMPLE_MATRICES [two for each of TESTS_COO and TESTS_HB] 
+
+The makefile in  TESTS_* will require that the user  edit the links to
+blas and lapack in the LINKS directive.
+
+To test a single  preconditioner, for example the arms preconditioner,
+type for matrices stored in coo format type:
+
+make zarms.ex 
+
+This should create an executable called arms.ex 
+
+Typing zarms.ex should run this  for the sample matrices in coordinate
+format located in SAMPLE_MATRICES and  for the input parameters in the
+file inputs.  [two sample matrices  are provided in  coordinate format
+and two in the hb format]

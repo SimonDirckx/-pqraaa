@@ -1,0 +1,49 @@
+matvec.initialize() ;
+for (size_type i=0; i<Z.num_columns(); ++i) {
+  matvec.a_update( i+1, Z(glas2::all(),i) ) ;
+  matvec.b_update( i+1, shift+Z(glas2::all(),i) ) ;
+}
+for (size_type i=0; i<U.num_columns(); ++i) {
+  matvec.b_update( i, shift+U(glas2::all(),i) ) ;
+}
+matvec.multiply_add( Q, w )
+
+
+voor monomial:
+
+class matvec_monomial {
+public:
+  void initialize() {
+    std::fill( which.begin(), which.end(), false ) ;
+
+    fill( accum_, 0.0 ) ;
+  } // initialize()
+
+  template <typename V>
+  void a_update( degree_type i, V const& v ) {
+    accum_( glas2::all(), i ) += v ;
+    which[i] = true ;
+  } // a_update()
+
+  template <typename V>
+  void b_update( degree_type i, V const& v ) {
+    if (i==degree()-1) {
+      accum_( glas2::all(), i+1 ) += v ;
+      which[i+1] = true ;
+    }
+  } // b_update()
+
+  template <typename QQ, typename W>
+  void multiply_add( QQ const& Q, W w ) {
+    for (degree_type i=0; i<=degree(); ++i) {
+      if (which[i]) {
+        temp_ = multiply( Q, accum_( glas2::all, i ) ) ;
+        coefficient_matrix.multiply_add( i, temp_, w ) ;
+      }
+    }
+  } // multiply_add()
+
+private:
+  std::vector<bool>                which ;
+  glas2::shared_matrix<value_type> accum ;
+} ; 

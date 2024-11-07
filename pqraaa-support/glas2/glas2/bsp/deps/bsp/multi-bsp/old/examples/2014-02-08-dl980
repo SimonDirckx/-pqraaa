@@ -1,0 +1,638 @@
+FFT benchmark on input vector of size 2^17
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 1.537252 ms., minimum time measured: 0.793798 ms., stddev: 1.890495 ms.
+Average computing rate in FFT: 7.417955 Gflop/s, maximum flop rate: 14.365452 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 23.179314 ms., minimum time measured: 22.328185 ms., stddev: 1.905337 ms.
+Average computing rate in FFT: 0.491959 Gflop/s, maximum flop rate: 0.510712 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 23.605912 ms., minimum time measured: 22.823241 ms., stddev: 1.799912 ms.
+Average computing rate in FFT: 0.483068 Gflop/s, maximum flop rate: 0.499634 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 31.830379 ms., minimum time measured: 30.052837 ms., stddev: 1.644668 ms.
+Average computing rate in FFT: 0.358251 Gflop/s, maximum flop rate: 0.379441 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 45.728988 ms., minimum time measured: 44.469741 ms., stddev: 1.961430 ms.
+Average computing rate in FFT: 0.249366 Gflop/s, maximum flop rate: 0.256427 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^18
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 2.393321 ms., minimum time measured: 0.928256 ms., stddev: 3.957321 ms.
+Average computing rate in FFT: 10.076897 Gflop/s, maximum flop rate: 25.981240 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 27.958841 ms., minimum time measured: 26.188612 ms., stddev: 3.458717 ms.
+Average computing rate in FFT: 0.862598 Gflop/s, maximum flop rate: 0.920906 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 29.146992 ms., minimum time measured: 27.746124 ms., stddev: 3.527906 ms.
+Average computing rate in FFT: 0.827435 Gflop/s, maximum flop rate: 0.869211 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 46.248165 ms., minimum time measured: 44.681241 ms., stddev: 1.844725 ms.
+Average computing rate in FFT: 0.521475 Gflop/s, maximum flop rate: 0.539762 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 57.617806 ms., minimum time measured: 56.118818 ms., stddev: 1.798068 ms.
+Average computing rate in FFT: 0.418573 Gflop/s, maximum flop rate: 0.429753 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^19
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 447296119336248496486540415765765231014370774568362083390797390225020009406762597008792808060998465861902931007099483968610684623833825176783023889018045810522558180243131743815307490648351793906465453754360421623326374576361392783725600702464.000000 ms., minimum time measured: 1.250224 ms., stddev: inf ms.
+Average computing rate in FFT: 0.000000 Gflop/s, maximum flop rate: 40.677475 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 34.502133 ms., minimum time measured: 31.459064 ms., stddev: 7.868233 ms.
+Average computing rate in FFT: 1.473994 Gflop/s, maximum flop rate: 1.616575 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 35.704957 ms., minimum time measured: 33.600854 ms., stddev: 5.072485 ms.
+Average computing rate in FFT: 1.424338 Gflop/s, maximum flop rate: 1.513531 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 52.896631 ms., minimum time measured: 51.088721 ms., stddev: 2.254379 ms.
+Average computing rate in FFT: 0.961421 Gflop/s, maximum flop rate: 0.995444 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 74.197906 ms., minimum time measured: 73.020287 ms., stddev: 2.205888 ms.
+Average computing rate in FFT: 0.685409 Gflop/s, maximum flop rate: 0.696463 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^20
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 5.855268 ms., minimum time measured: 2.200090 ms., stddev: 10.424045 ms.
+Average computing rate in FFT: 18.266415 Gflop/s, maximum flop rate: 48.613811 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 47.979811 ms., minimum time measured: 44.045533 ms., stddev: 10.917022 ms.
+Average computing rate in FFT: 2.229162 Gflop/s, maximum flop rate: 2.428277 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 50.229954 ms., minimum time measured: 47.123332 ms., stddev: 6.288243 ms.
+Average computing rate in FFT: 2.129302 Gflop/s, maximum flop rate: 2.269677 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 63.536861 ms., minimum time measured: 60.224594 ms., stddev: 5.008517 ms.
+Average computing rate in FFT: 1.683350 Gflop/s, maximum flop rate: 1.775931 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 111.081932 ms., minimum time measured: 107.004087 ms., stddev: 3.780954 ms.
+Average computing rate in FFT: 0.962846 Gflop/s, maximum flop rate: 0.999539 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^21
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 8.954197 ms., minimum time measured: 4.355269 ms., stddev: 13.752119 ms.
+Average computing rate in FFT: 25.060345 Gflop/s, maximum flop rate: 51.522714 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 80.704886 ms., minimum time measured: 76.094461 ms., stddev: 14.002884 ms.
+Average computing rate in FFT: 2.780442 Gflop/s, maximum flop rate: 2.948904 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 77.597933 ms., minimum time measured: 73.898164 ms., stddev: 9.783171 ms.
+Average computing rate in FFT: 2.891769 Gflop/s, maximum flop rate: 3.036547 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 90.398139 ms., minimum time measured: 85.335953 ms., stddev: 7.570266 ms.
+Average computing rate in FFT: 2.482300 Gflop/s, maximum flop rate: 2.629551 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 191.870510 ms., minimum time measured: 183.775587 ms., stddev: 6.624847 ms.
+Average computing rate in FFT: 1.169514 Gflop/s, maximum flop rate: 1.221029 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^22
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 14.712428 ms., minimum time measured: 8.807876 ms., stddev: 18.393360 ms.
+Average computing rate in FFT: 31.929608 Gflop/s, maximum flop rate: 53.334320 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 141.035327 ms., minimum time measured: 134.778699 ms., stddev: 18.972423 ms.
+Average computing rate in FFT: 3.330811 Gflop/s, maximum flop rate: 3.485432 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 143.672880 ms., minimum time measured: 137.858811 ms., stddev: 16.554918 ms.
+Average computing rate in FFT: 3.269664 Gflop/s, maximum flop rate: 3.407559 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 150.437742 ms., minimum time measured: 146.404226 ms., stddev: 8.659763 ms.
+Average computing rate in FFT: 3.122634 Gflop/s, maximum flop rate: 3.208665 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 313.936091 ms., minimum time measured: 306.133079 ms., stddev: 9.606591 ms.
+Average computing rate in FFT: 1.496362 Gflop/s, maximum flop rate: 1.534503 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^23
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 46.004732 ms., minimum time measured: 37.552932 ms., stddev: 26.483079 ms.
+Average computing rate in FFT: 21.334047 Gflop/s, maximum flop rate: 26.135566 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 277.621526 ms., minimum time measured: 268.002757 ms., stddev: 29.107654 ms.
+Average computing rate in FFT: 3.535270 Gflop/s, maximum flop rate: 3.662153 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 285.163600 ms., minimum time measured: 274.126703 ms., stddev: 27.226994 ms.
+Average computing rate in FFT: 3.441769 Gflop/s, maximum flop rate: 3.580341 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 266.472985 ms., minimum time measured: 257.598752 ms., stddev: 7.397010 ms.
+Average computing rate in FFT: 3.683177 Gflop/s, maximum flop rate: 3.810062 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 586.682558 ms., minimum time measured: 573.960957 ms., stddev: 11.067640 ms.
+Average computing rate in FFT: 1.672910 Gflop/s, maximum flop rate: 1.709989 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^24
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 67.765706 ms., minimum time measured: 53.109794 ms., stddev: 46.152120 ms.
+Average computing rate in FFT: 30.204368 Gflop/s, maximum flop rate: 38.539414 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 510.542555 ms., minimum time measured: 494.932512 ms., stddev: 48.422820 ms.
+Average computing rate in FFT: 4.009108 Gflop/s, maximum flop rate: 4.135554 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 487.737605 ms., minimum time measured: 476.521808 ms., stddev: 33.717890 ms.
+Average computing rate in FFT: 4.196560 Gflop/s, maximum flop rate: 4.295334 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 455.679816 ms., minimum time measured: 450.796118 ms., stddev: 10.060201 ms.
+Average computing rate in FFT: 4.491795 Gflop/s, maximum flop rate: 4.540457 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 1086.727343 ms., minimum time measured: 1068.727941 ms., stddev: 13.848679 ms.
+Average computing rate in FFT: 1.883472 Gflop/s, maximum flop rate: 1.915193 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^25
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 8468428481233120454052899149695227365060651717102117717867656899790437740005260914047262925079211351856387366856526741276713262618420065839746799653662318034225239843078431905450231431022335439316583560168186204420376583852695616524108416509246418503945519366144.000000 ms., minimum time measured: 220.254169 ms., stddev: inf ms.
+Average computing rate in FFT: 0.000000 Gflop/s, maximum flop rate: 19.347706 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 1114.243297 ms., minimum time measured: 1092.045406 ms., stddev: 68.709069 ms.
+Average computing rate in FFT: 3.824490 Gflop/s, maximum flop rate: 3.902230 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 1107.471930 ms., minimum time measured: 1094.584071 ms., stddev: 33.489403 ms.
+Average computing rate in FFT: 3.847874 Gflop/s, maximum flop rate: 3.893180 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 860.523354 ms., minimum time measured: 854.911451 ms., stddev: 9.479849 ms.
+Average computing rate in FFT: 4.952118 Gflop/s, maximum flop rate: 4.984625 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 2085.944983 ms., minimum time measured: 2067.953972 ms., stddev: 18.898754 ms.
+Average computing rate in FFT: 2.042917 Gflop/s, maximum flop rate: 2.060690 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^26
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 303.271149 ms., minimum time measured: 284.512154 ms., stddev: 57.914593 ms.
+Average computing rate in FFT: 29.209406 Gflop/s, maximum flop rate: 31.135296 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 6349.491260 ms., minimum time measured: 6318.145840 ms., stddev: 32.767498 ms.
+Average computing rate in FFT: 1.395131 Gflop/s, maximum flop rate: 1.402052 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 3615.182167 ms., minimum time measured: 3597.373228 ms., stddev: 26.556271 ms.
+Average computing rate in FFT: 2.450325 Gflop/s, maximum flop rate: 2.462455 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 2352.495388 ms., minimum time measured: 2341.677832 ms., stddev: 6.674240 ms.
+Average computing rate in FFT: 3.765521 Gflop/s, maximum flop rate: 3.782916 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 4478.587040 ms., minimum time measured: 4447.206404 ms., stddev: 20.199767 ms.
+Average computing rate in FFT: 1.977939 Gflop/s, maximum flop rate: 1.991895 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^27
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 7820032025514428228935813986302364057406180459424909337384987383683851658033663826947021333421490849267956862481526654447032406789213210678635682479159580387599541466695442741030646315138818804377663197488893003086889283989636173151264946022155475052961368303992832.000000 ms., minimum time measured: 663.567074 ms., stddev: inf ms.
+Average computing rate in FFT: 0.000000 Gflop/s, maximum flop rate: 27.710580 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 5503.148573 ms., minimum time measured: 5473.153597 ms., stddev: 65.263139 ms.
+Average computing rate in FFT: 3.341329 Gflop/s, maximum flop rate: 3.359641 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 4770.707230 ms., minimum time measured: 4750.624144 ms., stddev: 45.101260 ms.
+Average computing rate in FFT: 3.854319 Gflop/s, maximum flop rate: 3.870613 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 4057.852816 ms., minimum time measured: 4033.943640 ms., stddev: 17.824545 ms.
+Average computing rate in FFT: 4.531418 Gflop/s, maximum flop rate: 4.558276 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 7933.480820 ms., minimum time measured: 7873.952926 ms., stddev: 54.831526 ms.
+Average computing rate in FFT: 2.317750 Gflop/s, maximum flop rate: 2.335273 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^28
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 28690223817355620122411776479197522047278670119918783985180609601134191347499008.000000 ms., minimum time measured: 1669.920485 ms., stddev: 90726453842854464728744900326109287708576109044602251899628015684045202169790464.000000 ms.
+Average computing rate in FFT: 0.000000 Gflop/s, maximum flop rate: 22.826138 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 10780.073321 ms., minimum time measured: 10748.327124 ms., stddev: 76.467771 ms.
+Average computing rate in FFT: 3.535953 Gflop/s, maximum flop rate: 3.546397 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 9280.210956 ms., minimum time measured: 9249.718005 ms., stddev: 80.374340 ms.
+Average computing rate in FFT: 4.107432 Gflop/s, maximum flop rate: 4.120973 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 7499.987951 ms., minimum time measured: 7462.104954 ms., stddev: 25.010021 ms.
+Average computing rate in FFT: 5.082386 Gflop/s, maximum flop rate: 5.108188 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 15198.674114 ms., minimum time measured: 15017.422910 ms., stddev: 130.822790 ms.
+Average computing rate in FFT: 2.507971 Gflop/s, maximum flop rate: 2.538241 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^29
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 85449876645272349656846799975166355090731156815006482190346336679738850922150446951587712614285939186739609294110202516103359904486465908307414730993858984874958648455888829724865167742576680602129347374506017025085673314194510854996758776058200962629632.000000 ms., minimum time measured: 3539.529820 ms., stddev: inf ms.
+Average computing rate in FFT: 0.000000 Gflop/s, maximum flop rate: 22.296754 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 21208.089433 ms., minimum time measured: 21131.117536 ms., stddev: 141.128488 ms.
+Average computing rate in FFT: 3.721223 Gflop/s, maximum flop rate: 3.734778 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 18950.400641 ms., minimum time measured: 18887.224697 ms., stddev: 128.301291 ms.
+Average computing rate in FFT: 4.164557 Gflop/s, maximum flop rate: 4.178487 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 15262.858785 ms., minimum time measured: 15217.121666 ms., stddev: 45.002175 ms.
+Average computing rate in FFT: 5.170724 Gflop/s, maximum flop rate: 5.186265 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 31207.076148 ms., minimum time measured: 30927.331112 ms., stddev: 248.624347 ms.
+Average computing rate in FFT: 2.528914 Gflop/s, maximum flop rate: 2.551789 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^30
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 5710.866054 ms., minimum time measured: 5672.441850 ms., stddev: 95.785615 ms.
+Average computing rate in FFT: 28.578635 Gflop/s, maximum flop rate: 28.772222 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 38934.422196 ms., minimum time measured: 38801.342315 ms., stddev: 263.183940 ms.
+Average computing rate in FFT: 4.191889 Gflop/s, maximum flop rate: 4.206266 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 35353.025365 ms., minimum time measured: 35195.029563 ms., stddev: 247.932165 ms.
+Average computing rate in FFT: 4.616543 Gflop/s, maximum flop rate: 4.637267 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 28661.457842 ms., minimum time measured: 28575.956076 ms., stddev: 69.319595 ms.
+Average computing rate in FFT: 5.694363 Gflop/s, maximum flop rate: 5.711401 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 62914.314604 ms., minimum time measured: 62662.151220 ms., stddev: 253.588897 ms.
+Average computing rate in FFT: 2.594143 Gflop/s, maximum flop rate: 2.604583 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^31
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 11523.821447 ms., minimum time measured: 11466.069369 ms., stddev: 163.079058 ms.
+Average computing rate in FFT: 29.257216 Gflop/s, maximum flop rate: 29.404578 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 75542.525251 ms., minimum time measured: 75189.620734 ms., stddev: 515.771881 ms.
+Average computing rate in FFT: 4.463114 Gflop/s, maximum flop rate: 4.484062 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 65628.125632 ms., minimum time measured: 65302.380079 ms., stddev: 567.983882 ms.
+Average computing rate in FFT: 5.137354 Gflop/s, maximum flop rate: 5.162981 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 55339.119151 ms., minimum time measured: 55161.371918 ms., stddev: 199.414747 ms.
+Average computing rate in FFT: 6.092524 Gflop/s, maximum flop rate: 6.112156 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 118186.409469 ms., minimum time measured: 117436.198071 ms., stddev: 589.354855 ms.
+Average computing rate in FFT: 2.852739 Gflop/s, maximum flop rate: 2.870963 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^32
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 24926.151116 ms., minimum time measured: 24818.086078 ms., stddev: 293.280029 ms.
+Average computing rate in FFT: 27.913844 Gflop/s, maximum flop rate: 28.035389 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 155620.171101 ms., minimum time measured: 155264.206495 ms., stddev: 1076.451674 ms.
+Average computing rate in FFT: 4.471044 Gflop/s, maximum flop rate: 4.481295 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 147229.027597 ms., minimum time measured: 146687.328785 ms., stddev: 1033.915005 ms.
+Average computing rate in FFT: 4.725866 Gflop/s, maximum flop rate: 4.743318 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 113245.650534 ms., minimum time measured: 112665.735374 ms., stddev: 426.805110 ms.
+Average computing rate in FFT: 6.144030 Gflop/s, maximum flop rate: 6.175655 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 239336.545232 ms., minimum time measured: 237100.962119 ms., stddev: 1250.071245 ms.
+Average computing rate in FFT: 2.907139 Gflop/s, maximum flop rate: 2.934550 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^33
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+Average time per FFT: 3731219309881448726528.000000 ms., minimum time measured: 60271.833523 ms., stddev: 11799151468826983399424.000000 ms.
+Average computing rate in FFT: 0.000000 Gflop/s, maximum flop rate: 23.800820 Gflop/s.
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Average time per FFT: 378906.638033 ms., minimum time measured: 377884.337425 ms., stddev: 2544.630997 ms.
+Average computing rate in FFT: 3.785943 Gflop/s, maximum flop rate: 3.796186 Gflop/s.
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Average time per FFT: 292180.851331 ms., minimum time measured: 291153.644211 ms., stddev: 2719.156098 ms.
+Average computing rate in FFT: 4.909696 Gflop/s, maximum flop rate: 4.927017 Gflop/s.
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+Average time per FFT: 243347.760838 ms., minimum time measured: 242577.770745 ms., stddev: 766.839932 ms.
+Average computing rate in FFT: 5.894934 Gflop/s, maximum flop rate: 5.913646 Gflop/s.
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Average time per FFT: 529539.980795 ms., minimum time measured: 526305.736744 ms., stddev: 4598.735926 ms.
+Average computing rate in FFT: 2.708991 Gflop/s, maximum flop rate: 2.725638 Gflop/s.
+done
+ 
+FFT benchmark on input vector of size 2^34
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+./fft-bench.sh: line 5: 76152 Killed                  ./multibsp-fft64 $i
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+Memory allocation failed in mcbsp_util_stack_grow!
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+Memory allocation failed in mcbsp_util_stack_grow!
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+./fft-bench.sh: line 5: 77303 Segmentation fault      ./multibsp-fft8x8 $i
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+Memory allocation failed in mcbsp_util_stack_grow!
+done
+ 
+FFT benchmark on input vector of size 2^35
+------------------------------------------
+ 
+64:
+Compiled with MultiBSP computer model:
+( 64, 8 GB )
+./fft-bench.sh: line 5: 78026 Killed                  ./multibsp-fft64 $i
+ 
+1x64:
+Compiled with MultiBSP computer model:
+( 1, 8 GB ), ( 64, 4 GB )
+terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+./fft-bench.sh: line 5: 78388 Aborted                 ./multibsp-fft1x64 $i
+ 
+2x32:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 32, 4 GB )
+./fft-bench.sh: line 5: 78749 Killed                  ./multibsp-fft2x32 $i
+ 
+8x8:
+Compiled with MultiBSP computer model:
+( 8, 8 GB ), ( 8, 4 GB )
+terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+./fft-bench.sh: line 5: 79106 Aborted                 ./multibsp-fft8x8 $i
+ 
+2x4x8:
+Compiled with MultiBSP computer model:
+( 2, 8 GB ), ( 4, 4 GB ), ( 8, 2 GB )
+manual terminate from this point

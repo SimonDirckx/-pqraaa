@@ -1,0 +1,70 @@
+//  (C) Copyright Roel Van Beeumen, Wim Michiels & Karl Meerbergen 2016.
+//  Use, modification and distribution are subject to the 
+//  CORK Software License, Version 1.0. (See accompanying file 
+//  LICENSE_1_0.txt)
+
+#ifndef cork_basis4cork_monomial_hpp
+#define cork_basis4cork_monomial_hpp
+
+#include <cork/basis/monomial.hpp>
+#include <cork/basis4cork/basis4cork.hpp>
+#include <glas2/matrix.hpp>
+#include <glas2/vector.hpp>
+#include <cassert>
+#ifndef NDEBUG
+#include <limits>
+#endif
+
+namespace CORK { namespace basis4CORK {
+
+  template <typename T, typename I>
+  class basis4CORK< T, basis::monomial<I> >
+  : public basis::monomial<I>
+  {
+    public:
+      typedef T value_type ;
+      typedef I grade_type ;
+
+    public:
+      explicit basis4CORK( basis::monomial<I> const& basis )
+      {}
+
+    public:
+      // Basis4CORK
+      int grade() const { return this->size() ; }
+
+    public:
+      // Basis4CORK
+      void shift( value_type s ) { s_ = s ; }
+
+      // Basis4CORK
+      value_type shift() const { return s_ ; }
+
+      // Basis4CORK
+      template <typename UM, typename ZM>
+      void multiply_N( UM const& U, ZM Z ) const {
+        Z = U( glas2::range(0,U.num_rows()-1), glas2::all() ) ;
+      } // multiply_N()
+
+      // Basis4CORK
+      template <typename Z0, typename ZZ>
+      void lower_solve_right_hand_side( Z0 const& z0, ZZ Z ) const {
+        fill( Z, 0.0 ) ;
+        Z( 0, glas2::all() ) = s_ * z0 ;
+      } // multiply_N()
+
+      // Basis4CORK
+      template <typename ZM>
+      void solve( ZM Z ) const {
+        for (typename ZM::size_type i=1; i<Z.num_rows(); ++i) {
+          Z(i, glas2::all()) += s_ * Z(i-1, glas2::all()) ;
+        }
+      } // solve()
+
+    private:
+      value_type s_ ;
+  } ; // monomial
+
+} } // namespace CORK::basis4CORK
+
+#endif

@@ -1,0 +1,1 @@
+make: 'smout.o' is up to date.

@@ -1,0 +1,97 @@
+#ifndef BEACHPACK_CORE_H
+#define BEACHPACK_CORE_H
+//
+// Project     : BEACHpack
+// File        : Core
+// Description : Core BEACHpack module handling preprocessor macros
+// Author      : Kobe Bruyninckx
+// Copyright   : KU Leuven Dept. CS 2024.
+//
+
+// Note: This is a macro for Boost.Numeric.Bindings. Normally,
+// it is not required to enable this, but due to clashes with 
+// Eigen, it is. This needs to be properly fixed in the future. (TODO)
+#define BOOST_NUMERIC_BINDINGS_SIGNED_FBOOL
+
+/**
+ * Define preprocessor macros
+ */
+#ifdef BEACHPACK_EIGEN_USE_BLAS
+    // Forward use of BLAS to Eigen
+    #ifndef EIGEN_USE_BLAS
+        #define EIGEN_USE_BLAS
+    #endif
+#endif
+
+#ifdef BEACHPACK_EIGEN_USE_LAPACKE
+    // Forward use of LAPACKE to Eigen
+    #ifndef EIGEN_USE_LAPACKE
+        #define EIGEN_USE_LAPACKE
+    #endif
+#endif
+
+#ifdef BEACHPACK_USE_MKL
+    #ifndef BEACHPACK_EIGEN_NO_MKL
+        // Forward use of MKL to Eigen
+        #ifndef EIGEN_USE_MKL_ALL
+            #define EIGEN_USE_MKL_ALL
+        #endif
+    #endif
+    // Forward use of MKL to Boost.Numeric.Bindings
+    #ifndef BOOST_NUMERIC_BINDINGS_USE_MKL
+        #define BOOST_NUMERIC_BINDINGS_USE_MKL
+    #endif
+#else
+    #if defined(BEACHPACK_USE_ALT_LAPACK_BINDINGS)
+        // Forward use of alternative LAPACK bindings to Boost.Numeric.Bindings
+        #ifndef BOOST_NUMERIC_BINDINGS_USE_SYSTEM_LAPACK_H
+            #define BOOST_NUMERIC_BINDINGS_USE_SYSTEM_LAPACK_H
+        #endif
+    #endif
+#endif
+
+#if defined(__STDC_IEC_559_COMPLEX__) || (__STDC_IEC_60559_COMPLEX__)
+    // Enable complex numbers in GLAS if compiler supports it
+    #ifndef GLAS_COMPLEX
+        #define GLAS_COMPLEX
+    #endif
+#endif
+
+
+/**
+ * Include Eigen/Core to process Eigen's preprocessor macros
+ */
+#include <Eigen/Core>
+
+
+/**
+ * Include appropriate LAPACKE header file for Eigen
+ * 
+ * This differs from the normal inclusion of Eigen/src/misc/lapacke.h in
+ * Eigen's original modules. This is because Eigen's lapacke.h defines
+ * LAPACK C-interfaces that are not compatible with the LAPACK C-interfaces
+ * that will be used in Boost.Numeric.Bindings. Therefore, we include an
+ * alternative header file that does not define these interfaces, as they
+ * aren't even used in Eigen, only the LAPACKE C-interfaces are.
+ * 
+ * Additionally, if Boost.Numerc.Bindings uses a system lapack.h, it
+ * defines the lapack_complex_float and lapack_complex_double types, which
+ * are also used in Eigen's lapacke.h. Therefore, we define these types
+ * here in the same way as Boost.Numeric.Bindings does.
+ */
+#ifdef EIGEN_USE_LAPACKE
+    #ifdef EIGEN_USE_MKL
+        #include "mkl_lapacke.h"
+    #else
+        #ifdef BOOST_NUMERIC_BINDINGS_USE_SYSTEM_LAPACK_H
+            // These are also used in Boost.Numeric.Bindings and the definitions have to match
+            #define lapack_complex_float std::complex<float>
+            #define lapack_complex_double std::complex<double>
+        #endif
+        // Alternative to Eigen/src/misc/lapacke.h without lapack-bindings
+        #include <BEACHpack/linalg/Eigen-alt/lapacke.h>
+    #endif
+#endif
+
+
+#endif // BEACHPACK_CORE_H

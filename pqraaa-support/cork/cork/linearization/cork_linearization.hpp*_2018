@@ -1,0 +1,643 @@
+//  (C) Copyright Roel Van Beeumen, Wim Michiels & Karl Meerbergen 2016.
+//  Use, modification and distribution are subject to the 
+//  CORK Software License, Version 1.0. (See accompanying file 
+//  LICENSE_1_0.txt)
+
+#ifndef cork_linearization_cork_linearization_hpp
+#define cork_linearization_cork_linearization_hpp
+
+#include <cork/linearization/info.hpp>
+#include <cork/coefficient_matrices/coefficient_matrices4cork.hpp>
+#include <glas2/vector.hpp>
+#include <glas2/matrix.hpp>
+#include <type_traits>
+#include <exception>
+
+namespace CORK { namespace linearization {
+
+  template <typename Basis4CORK, typename MatrixIterator, typename CoefficientMatrices, typename LinearSolver>
+  class cork_linearization
+  {
+    public:
+      typedef typename std::decay<Basis4CORK>::type                basis4cork_type ;
+      typedef typename std::decay<MatrixIterator>::type            matrix_iterator_type ;
+      typedef typename std::decay<CoefficientMatrices>::type       coefficient_matrices_type ;
+      typedef typename std::decay<LinearSolver>::type              linear_solver_type ;
+
+      typedef typename basis4cork_type::size_type                  size_type ;
+      typedef typename coefficient_matrices_type::value_type       value_type ;
+      typedef typename linear_solver_type::value_type              solver_value_type ;
+
+    private:
+      typedef decltype(std::abs(value_type()))                                                         real_value_type ;
+      typedef coefficient_matrices::coefficient_matrices4CORK< value_type, coefficient_matrices_type > coefficient_matrices_4cork_type ;
+
+    public:
+      cork_linearization( Basis4CORK poly, MatrixIterator matrix_iterator, CoefficientMatrices coefficient_matrices, LinearSolver linear_solver, info& information )
+      : basis_( poly )
+      , matrix_iterator_( matrix_iterator )
+      , coefficient_matrices_( coefficient_matrices )
+//      , coefficient_matrices_4cork_( coefficient_matrices_ )
+      , linear_solver_( linear_solver )
+      , information_( information )
+      {
+        assert( coefficient_matrices_.num_matrices()==basis_.num_terms() ) ;
+        information_.linearization = "CORK Linearization" ;
+      }
+
+    public:
+      size_type size_of_basis() const { return basis_.size() ; }
+      size_type size() const {
+        assert( coefficient_matrices_.num_rows()==coefficient_matrices_.num_columns() ) ;
+        return coefficient_matrices_.num_rows() ;
+      }
+
+      basis4cork_type const& basis() const { return basis_ ; }
+      coefficient_matrices_type const& coefficient_matrices() const { return coefficient_matrices_ ; }
+      linear_solver_type const& linear_solver() const { return linear_solver_ ; }
+      linear_solver_type& linear_solver() { return linear_solver_ ; }
+      matrix_iterator_type const& matrix_iterator() const { return matrix_iterator_ ; }
+      matrix_iterator_type& matrix_iterator() { return matrix_iterator_ ; }
+      info& information() { return information_ ; }
+
+    public:
+      typedef cork_linearization< basis4cork_type, matrix_iterator_type&, coefficient_matrices_type const&, typename linear_solver_type::clone_type > clone_type ;
+      clone_type clone() {
+        return clone_type( basis_, matrix_iterator_, coefficient_matrices_, linear_solver_.clone(), information_ ) ;
+      }
+
+    public:
+      void shift( solver_value_type s ) {
+        basis_.shift( s ) ;
+        try {
+          // Do this more accurately using M&N
+          //linear_solver_.prepare_solve( basis_ ) ;
+          linear_solver_.prepare_solve( s ) ;
+          ++information_.number_of_factorizations ;
+        } catch (std::exception& err) {
+          information_.error = err.what() ;
+          throw err ;
+        }
+      }
+
+      solver_value_type shift() const { return basis_.shift() ; }
+
+    public:
+      // Multiply with alpha*A + beta*B
+      template <typename Alpha, typename Beta, typename QQ, typename UUIn, typename WOut, typename UUOut>
+      void multiply_AB( Alpha const& alpha, Beta const& beta, QQ const& Q, UUIn const& U_in, WOut w_out, UUOut U_out ) {
+        typedef typename WOut::value_type multiply_value_type ;
+        static_assert( std::is_convertible< Alpha, multiply_value_type >::value, "CORK::linerization::cork_linearization: Alpha cannot be converted to value_type of output vector" ) ;
+        static_assert( std::is_convertible< Beta, multiply_value_type >::value, "CORK::linerization::cork_linearization: Beta cannot be converted to value_type of output vector" ) ;
+        static_assert( std::is_convertible< typename UUIn::value_type, multiply_value_type >::value, "CORK::linerization::cork_linearization: value_type of input vector (U_in) cannot be converted to value_type of output vector" ) ;
+        static_assert( std::is_convertible< typename QQ::value_type, multiply_value_type >::value, "CORK::linerization::cork_linearization: value_type of input vector (Q) cannot be converted to value_type of output vector" ) ;
+
+        assert( w_out.size()==Q.num_rows() ) ;
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+        assert( U_in.num_columns()==Q.num_columns() ) ;
+        assert( U_out.num_columns()==Q.num_columns() ) ;
+
+        glas2::matrix<value_type> U2( U_out.num_rows()-1, U_out.num_columns() ) ;
+
+        // Compute lower blocks
+
+        fill( U_out, 0.0 ) ;
+
+        auto Zr = U_out( glas2::range_from_end(1,0), glas2::all() ) ;
+        basis_.multiply_M( alpha*U_in, Zr ) ;
+        basis_.multiply_N( beta*U_in, U2 ) ;
+        Zr += U2 ;
+
+        // Compute first block.
+        glas2::fill( w_out, 0.0 ) ;
+
+        coefficient_matrices::coefficient_matrices4CORK< multiply_value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+        coefficient_matrices_4cork.initialize_schedule( Q, glas2::range(0, coefficient_matrices_.num_matrices() ) ) ;
+        if (alpha!=0.0) matrix_iterator_.schedule_a_0( coefficient_matrices_4cork.accumulator(), [&U_in,&alpha] (auto i) { return alpha*U_in(i, glas2::all()) ; } ) ;
+        if (beta!=0.0) matrix_iterator_.schedule_b_0( coefficient_matrices_4cork.accumulator(), [&U_in,&beta] (auto i) { return beta*U_in(i, glas2::all()) ; } ) ;
+        coefficient_matrices_4cork.apply_scheduled( coefficient_matrices_, Q, w_out ) ;
+      } // multiply_AB()
+
+      template <typename QQ, typename UUIn, typename W0, typename UUOut>
+      void multiply_A( QQ const& Q, UUIn const& U_in, W0 w0, UUOut U_out ) {
+        typedef typename W0::value_type multiply_value_type ;
+        static_assert( std::is_convertible< typename UUIn::value_type, multiply_value_type >::value, "CORK::linerization::cork_linearization: value_type of input vector (U_in) cannot be converted to value_type of output vector" ) ;
+        static_assert( std::is_convertible< typename QQ::value_type, multiply_value_type >::value, "CORK::linerization::cork_linearization: value_type of input vector (Q) cannot be converted to value_type of output vector" ) ;
+
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        fill( U_out, 0.0 ) ;
+
+        auto Zr = U_out( glas2::range_from_end(1,0), glas2::all() ) ;
+        basis_.multiply_M( U_in, Zr ) ;
+
+        // Compute first block.
+        glas2::fill( w0, 0.0 ) ;
+
+        coefficient_matrices::coefficient_matrices4CORK< multiply_value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+        coefficient_matrices_4cork.initialize_schedule( Q, glas2::range(0, coefficient_matrices_.num_matrices() ) ) ;
+        matrix_iterator_.schedule_a_0( coefficient_matrices_4cork.accumulator(), [&U_in] (auto i) { return U_in(i, glas2::all()) ; } ) ;
+        coefficient_matrices_4cork.apply_scheduled( coefficient_matrices_, Q, w0 ) ;
+      } // multiply_A()
+
+      template <typename QQ, typename UUIn, typename W0, typename UUOut>
+      void multiply_B( QQ const& Q, UUIn const& U_in, W0 w0, UUOut U_out ) {
+        typedef typename W0::value_type multiply_value_type ;
+        static_assert( std::is_convertible< typename UUIn::value_type, multiply_value_type >::value, "CORK::linerization::cork_linearization: value_type of input vector (U_in) cannot be converted to value_type of output vector" ) ;
+        static_assert( std::is_convertible< typename QQ::value_type, multiply_value_type >::value, "CORK::linerization::cork_linearization: value_type of input vector (Q) cannot be converted to value_type of output vector" ) ;
+
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        fill( U_out, 0.0 ) ;
+
+        auto Zr = U_out( glas2::range_from_end(1,0), glas2::all() ) ;
+        basis_.multiply_N( U_in, Zr ) ;
+
+        // Compute first block.
+        glas2::fill( w0, 0.0 ) ;
+
+        coefficient_matrices::coefficient_matrices4CORK< multiply_value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+        coefficient_matrices_4cork.initialize_schedule( Q, glas2::range(0, coefficient_matrices_.num_matrices() ) ) ;
+        matrix_iterator_.schedule_b_0( coefficient_matrices_4cork.accumulator(), [&U_in] (auto i) { return U_in(i, glas2::all()) ; } ) ;
+        coefficient_matrices_4cork.apply_scheduled( coefficient_matrices_, Q, w0 ) ;
+      } // multiply_B()
+
+      template <typename QQ, typename UUIn, typename UUOut,typename R>
+      void krylov_step_real( QQ& Q, int& rank, UUIn const& U_in, UUOut U_out, R const& drop_tol ) {
+        // Krylov step when the shift is complex and Q is real.
+        // It is assumed U has the value_type "value_type".
+        //
+        typedef typename QQ::value_type q_value_type ;
+
+        glas2::all all ;
+        assert( Q.num_columns()>rank ) ;
+        assert( U_in.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        glas2::vector< value_type > ws( Q.num_rows() ) ;
+
+        fill( U_out, 0.0 ) ;
+
+        //auto w = Q( all, rank ) ; // w points next to last column of Q
+        {
+          glas2::range r_rank(0,rank) ;
+          auto Qr = Q( all, r_rank ) ;
+          auto Ur = U_in( all, r_rank ) ;
+          auto Zr = U_out( glas2::range_from_end(1,0), r_rank ) ;
+//        std::cout << "Ur before MN " << Ur << std::endl ;
+          basis_.multiply_N( Ur, Zr ) ;
+          basis_.solve( Zr ) ;
+//        std::cout << "Zr solve MN " << Zr << std::endl ;
+
+          // Compute right-hand side for solve with P.
+          glas2::fill( ws, 0.0 ) ;
+
+          coefficient_matrices::coefficient_matrices4CORK< value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+          coefficient_matrices_4cork.initialize_schedule( Qr, glas2::range(1,coefficient_matrices_.num_matrices() ) ) ;
+
+          // Compute B-terms for the right-hand side.
+          matrix_iterator_.schedule_b_0( coefficient_matrices_4cork.accumulator(), [&Ur] (auto i) { return Ur(i, glas2::all()) ; } ) ;
+          value_type s = shift() ;
+          matrix_iterator_.schedule_b_1( coefficient_matrices_4cork.accumulator(), [&Zr,&s] (auto i) { return s * Zr(i-1, glas2::all()) ; } ) ;
+
+          // Compute A-terms for the right-hand side.
+          matrix_iterator_.schedule_a_1( coefficient_matrices_4cork.accumulator(), [&Zr] (auto i) { return -Zr(i-1, glas2::all()) ; } ) ;
+
+          coefficient_matrices_4cork.apply_scheduled( coefficient_matrices_, Qr, ws ) ;
+//          std::cout << "ws " << ws << std::endl ;
+
+//          ws *= -1.0 ;
+
+          // Do the solve
+          //std::cout << "Norm ws on input solver " << norm_2(ws) << std::endl;
+          linear_solver_.solve( ws ) ;
+          ++information_.number_of_solves ;
+          //std::cout << "Norm w on output solver " << norm_q << std::endl;
+
+          // Gram-Schmidt orthogonalization and possible expansion of Q.
+          auto norm_q = norm_2( real(ws) ) ;
+
+          // Orthonormalize real part
+          auto w_r = Q(all,rank) ;
+          glas2::vector<q_value_type> g(rank) ;
+          glas2::matrix<q_value_type> H(rank+2,2) ;
+          fill(H,0.0) ;
+
+          auto h_r = H(glas2::range(0,rank),0) ;
+          w_r = real( ws ) ;
+          h_r = multiply( transpose(Qr), w_r ) ;
+          w_r -= multiply(Qr, h_r ) ;
+          g = multiply( transpose(conj(Qr)), w_r ) ;
+          h_r += g ;
+          w_r -= multiply(Qr, g ) ;
+          auto norm_w_r = norm_2(w_r) ;
+          //std::cout <<"norm_w " << norm_w << std::endl ;
+          if (norm_w_r>drop_tol*norm_q) {
+            w_r /= norm_w_r ;
+            H(rank,0) = norm_w_r ;
+            ++rank ;
+          }
+          auto Qr2 = Q( all, glas2::range(0,rank) ) ;
+
+          // Orthonormalize imaginary part
+          auto w_i = Q(all,rank) ;
+          glas2::vector<q_value_type> gi(rank) ;
+
+          auto h_i = H(glas2::range(0,rank),1) ;
+          w_i = imag( ws ) ;
+          h_i = multiply( transpose(Qr2), w_i ) ;
+          w_i -= multiply(Qr2, h_i ) ;
+          gi = multiply( transpose(Qr2), w_i ) ;
+          h_i += gi ;
+          w_i -= multiply(Qr2, gi ) ;
+          auto norm_w_i = norm_2(w_i) ;
+          //std::cout <<"norm_w " << norm_w << std::endl ;
+          if (norm_w_i>drop_tol*norm_q) {
+            w_i /= norm_w_i ;
+            H(rank,1) = norm_w_i ;
+            ++rank ;
+          }
+
+          // Update U_out_c with the new Q
+          U_out(0,glas2::range(0,rank)) = H(glas2::range(0,rank),0) + value_type(0.,1.0) * H(glas2::range(0,rank),1) ;
+        }
+        assert( Q.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        {
+          glas2::range r_rank(0,rank) ;
+          auto Zr = U_out( glas2::range_from_end(1,0), r_rank ) ;
+          auto z_0 = U_out(0, r_rank) ;
+        //std::cout << "Zr " << Zr << std::endl ;
+        //std::cout << "z_0 " << z_0 << std::endl ;
+
+          glas2::matrix< value_type > accum( Zr.num_rows(), Zr.num_columns() ) ;
+          basis_.lower_solve_right_hand_side( z_0, accum ) ;
+          basis_.solve( accum ) ;
+          Zr -= accum ;
+        //std::cout << "Zr accum " << Zr << std::endl ;
+        }
+      } // krylov_step_real()
+
+    public:
+
+      // (A+sB)^{-1} (I x Q) vec(U)
+/*      template <typename QQout, typename QQIn, typename UUOut, typename UUIn, typename R>
+      void state_vector( QQIn const& Q_in, QQOut& Q_out, int rank_in, int& rank_out, UUIn coonst& U_in, UU U_out, R const& drop_tol ) {
+        glas2::all all ;
+        assert( Q_in.num_columns()>rank ) ;
+        assert( Q_out.num_columns()>rank ) ;
+        assert( U_in.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        auto w = Q_out( all, rank ) ; // w points next to last column of Q
+        {
+          glas2::range r_rank_in(0,rank_in) ;
+          auto Qr_in = Q_in( all, r_rank_in ) ;
+          auto Ur_in = U_in( all, r_rank_in ) ;
+          auto Zr = U_in( glas2::range_from_end(1,0), r_rank ) ;
+//        std::cout << "Ur before MN " << Ur << std::endl ;
+          basis_.solve( Zr ) ;
+//        std::cout << "Zr solve MN " << Zr << std::endl ;
+
+          glas2::shared_vector<value_type> g(rank) ;
+
+          // Compute right-hand side for solve with P.
+          w = multiply( Qr_in, Ur_in ) ;
+
+          coefficient_matrices_4cork_.initialize_schedule( Qr_in ) ;
+
+          // Compute B-terms for the right-hand side.
+          value_type s = shift() ;
+          matrix_iterator_.schedule_b_1( coefficient_matrices_4cork_.accumulator(), [&Zr,&s] (auto i) { return s * Zr(i-1, glas2::all()) ; } ) ;
+
+          // Compute A-terms for the right-hand side.
+          matrix_iterator_.schedule_a( coefficient_matrices_4cork_.accumulator(), [&Zr] (auto i) { return -Zr(i-1, glas2::all()) ; } ) ;
+
+          coefficient_matrices_4cork_.apply_scheduled( coefficient_matrices_, Qr, w ) ;
+
+          // Do the solve
+          //std::cout << "Norm w on input solver " << norm_2(w) << std::endl;
+          linear_solver_.solve( w ) ;
+          ++information_.number_of_solves ;
+          auto norm_q = norm_2(w) ;
+          //std::cout << "Norm w on output solver " << norm_q << std::endl;
+
+          // Gram-Schmidt orthogonalization and possible expansion of Q.
+          auto z_0 = U(0, r_rank) ; // First row of U will already be up to date.
+          z_0 = multiply( transpose(conj(Qr)), w ) ;
+          w -= multiply(Qr, z_0) ;
+          g = multiply( transpose(conj(Qr)), w ) ;
+          z_0 += g ;
+          w -= multiply(Qr, g) ;
+          auto norm_w = norm_2(w) ;
+          //std::cout <<"norm_w " << norm_w << std::endl ;
+          if (norm_w>drop_tol*norm_q) {
+            w /= norm_w ;
+            U_out(0,rank_out) = norm_w ;
+            ++rank ;
+          }
+          //std::cout << Q.num_rows() << " " << rank << std::endl ;
+        }
+        assert( Q_out.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        {
+          glas2::range r_rank_out(0,rank_out) ;
+          auto Zr_out = U_out( glas2::range_from_end(1,0), r_rank_out ) ;
+          auto z_0_out = U_out(0, r_rank_out) ;
+
+          glas2::matrix< value_type > accum( Zr_out.num_rows(), Zr_out.num_columns() ) ;
+          basis_.lower_solve_right_hand_side( z_0_out, accum ) ;
+          basis_.solve( accum ) ;
+          Zr_out -= accum ;
+        }
+      } // state_vector()
+      */
+
+
+      // RKS step for pole set by shift().
+      //
+      // Argument should be an RKS quadruple
+      // Input:
+      //   Q
+      //   U_in
+      //   r
+      // Output
+      //   Q
+      //   U_out
+      //   r
+      //
+      template <typename QQ, typename UUIn, typename UUOut,typename R>
+      typename std::enable_if< std::is_same< value_type, typename QQ::value_type >::value >::type krylov_step( QQ& Q, int& rank, UUIn const& U_in, UUOut U_out, R const& drop_tol ) {
+        // Krylov step when shift and Q have the same value_type;
+        // it is assumed U has the same value_type as Q
+        //
+        glas2::all all ;
+        assert( Q.num_columns()>rank ) ;
+        assert( U_in.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        fill( U_out, 0.0 ) ;
+
+        auto w = Q( all, rank ) ; // w points next to last column of Q
+        {
+          glas2::range r_rank(0,rank) ;
+          auto Qr = Q( all, r_rank ) ;
+          auto Ur = U_in( all, r_rank ) ;
+          auto Zr = U_out( glas2::range_from_end(1,0), r_rank ) ;
+//        std::cout << "Ur before MN " << Ur << std::endl ;
+          basis_.multiply_N( Ur, Zr ) ;
+          basis_.solve( Zr ) ;
+//        std::cout << "Zr solve MN " << Zr << std::endl ;
+
+          glas2::shared_vector<value_type> g(rank) ;
+
+          // Compute right-hand side for solve with P.
+          glas2::fill( w, 0.0 ) ;
+
+          coefficient_matrices::coefficient_matrices4CORK< value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+          coefficient_matrices_4cork.initialize_schedule( Qr, glas2::range(1,coefficient_matrices_.num_matrices() ) ) ;
+
+          // Compute B-terms for the right-hand side.
+          matrix_iterator_.schedule_b_0( coefficient_matrices_4cork.accumulator(), [&Ur] (auto i) { return Ur(i, glas2::all()) ; } ) ;
+          value_type s = shift() ;
+          matrix_iterator_.schedule_b_1( coefficient_matrices_4cork.accumulator(), [&Zr,&s] (auto i) { return s * Zr(i-1, glas2::all()) ; } ) ;
+
+          // Compute A-terms for the right-hand side.
+          matrix_iterator_.schedule_a_1( coefficient_matrices_4cork.accumulator(), [&Zr] (auto i) { return -Zr(i-1, glas2::all()) ; } ) ;
+
+          coefficient_matrices_4cork.apply_scheduled( coefficient_matrices_, Qr, w ) ;
+//          std::cout << "w " << w << std::endl ;
+
+//          w *= -1.0 ;
+
+          // Do the solve
+          //std::cout << "Norm w on input solver " << norm_2(w) << std::endl;
+          linear_solver_.solve( w ) ;
+          ++information_.number_of_solves ;
+          auto norm_q = norm_2(w) ;
+          //std::cout << "Norm w on output solver " << norm_q << std::endl;
+
+          // Gram-Schmidt orthogonalization and possible expansion of Q.
+          auto z_0 = U_out(0, r_rank) ; // First row of U will already be up to date.
+          z_0 = multiply( transpose(conj(Qr)), w ) ;
+          w -= multiply(Qr, z_0) ;
+          g = multiply( transpose(conj(Qr)), w ) ;
+          z_0 += g ;
+          w -= multiply(Qr, g) ;
+          auto norm_w = norm_2(w) ;
+          //std::cout <<"norm_w " << norm_w << std::endl ;
+          if (norm_w>drop_tol*norm_q) {
+            w /= norm_w ;
+            U_out(0,rank) = norm_w ;
+            ++rank ;
+          }
+          //std::cout << Q.num_rows() << " " << rank << std::endl ;
+        }
+        assert( Q.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        {
+          glas2::range r_rank(0,rank) ;
+          auto Zr = U_out( glas2::range_from_end(1,0), r_rank ) ;
+          auto z_0 = U_out(0, r_rank) ;
+        //std::cout << "Zr " << Zr << std::endl ;
+        //std::cout << "z_0 " << z_0 << std::endl ;
+
+          glas2::matrix< value_type > accum( Zr.num_rows(), Zr.num_columns() ) ;
+          basis_.lower_solve_right_hand_side( z_0, accum ) ;
+          basis_.solve( accum ) ;
+          Zr -= accum ;
+        //std::cout << "Zr accum " << Zr << std::endl ;
+        }
+      } // krylov_step()
+
+      template <typename QQ, typename UUIn, typename UUOut,typename R>
+      typename std::enable_if< std::is_same< std::complex< typename QQ::value_type >
+                                                  , value_type
+                                                  >::value >::type krylov_step( QQ& Q, int& rank, UUIn const& U_in, UUOut U_out, R const& drop_tol ) {
+        // Krylov step when the shift is complex and Q is real.
+        // It is assumed U has the value_type "value_type".
+        //
+        typedef typename QQ::value_type q_value_type ;
+
+        glas2::all all ;
+        assert( Q.num_columns()>rank ) ;
+        assert( U_in.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        glas2::vector< value_type > ws( Q.num_rows() ) ;
+
+        fill( U_out, 0.0 ) ;
+
+        //auto w = Q( all, rank ) ; // w points next to last column of Q
+        {
+          glas2::range r_rank(0,rank) ;
+          auto Qr = Q( all, r_rank ) ;
+          auto Ur = U_in( all, r_rank ) ;
+          auto Zr = U_out( glas2::range_from_end(1,0), r_rank ) ;
+//        std::cout << "Ur before MN " << Ur << std::endl ;
+          basis_.multiply_N( Ur, Zr ) ;
+          basis_.solve( Zr ) ;
+//        std::cout << "Zr solve MN " << Zr << std::endl ;
+
+          // Compute right-hand side for solve with P.
+          glas2::fill( ws, 0.0 ) ;
+
+          coefficient_matrices::coefficient_matrices4CORK< value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+          coefficient_matrices_4cork.initialize_schedule( Qr, glas2::range(1,coefficient_matrices_.num_matrices() ) ) ;
+
+          // Compute B-terms for the right-hand side.
+          matrix_iterator_.schedule_b_0( coefficient_matrices_4cork.accumulator(), [&Ur] (auto i) { return Ur(i, glas2::all()) ; } ) ;
+          value_type s = shift() ;
+          matrix_iterator_.schedule_b_1( coefficient_matrices_4cork.accumulator(), [&Zr,&s] (auto i) { return s * Zr(i-1, glas2::all()) ; } ) ;
+
+          // Compute A-terms for the right-hand side.
+          matrix_iterator_.schedule_a_1( coefficient_matrices_4cork.accumulator(), [&Zr] (auto i) { return -Zr(i-1, glas2::all()) ; } ) ;
+
+          coefficient_matrices_4cork.apply_scheduled( coefficient_matrices_, Qr, ws ) ;
+//          std::cout << "ws " << ws << std::endl ;
+
+//          ws *= -1.0 ;
+
+          // Do the solve
+          //std::cout << "Norm ws on input solver " << norm_2(ws) << std::endl;
+          linear_solver_.solve( ws ) ;
+          ++information_.number_of_solves ;
+          //std::cout << "Norm w on output solver " << norm_q << std::endl;
+
+          // Gram-Schmidt orthogonalization and possible expansion of Q.
+          auto norm_q = norm_2( real(ws) ) ;
+
+          // Orthonormalize real part
+          auto w_r = Q(all,rank) ;
+          glas2::vector<q_value_type> g(rank) ;
+          glas2::matrix<q_value_type> H(rank+2,2) ;
+          fill(H,0.0) ;
+
+          auto h_r = H(glas2::range(0,rank),0) ;
+          w_r = real( ws ) ;
+          h_r = multiply( transpose(Qr), w_r ) ;
+          w_r -= multiply(Qr, h_r ) ;
+          g = multiply( transpose(conj(Qr)), w_r ) ;
+          h_r += g ;
+          w_r -= multiply(Qr, g ) ;
+          auto norm_w_r = norm_2(w_r) ;
+          //std::cout <<"norm_w " << norm_w << std::endl ;
+          if (norm_w_r>drop_tol*norm_q) {
+            w_r /= norm_w_r ;
+            H(rank,0) = norm_w_r ;
+            ++rank ;
+          }
+          auto Qr2 = Q( all, glas2::range(0,rank) ) ;
+
+          // Orthonormalize imaginary part
+          auto w_i = Q(all,rank) ;
+          glas2::vector<q_value_type> gi(rank) ;
+
+          auto h_i = H(glas2::range(0,rank),1) ;
+          w_i = imag( ws ) ;
+          h_i = multiply( transpose(Qr2), w_i ) ;
+          w_i -= multiply(Qr2, h_i ) ;
+          gi = multiply( transpose(Qr2), w_i ) ;
+          h_i += gi ;
+          w_i -= multiply(Qr2, gi ) ;
+          auto norm_w_i = norm_2(w_i) ;
+          //std::cout <<"norm_w " << norm_w << std::endl ;
+          if (norm_w_i>drop_tol*norm_q) {
+            w_i /= norm_w_i ;
+            H(rank,1) = norm_w_i ;
+            ++rank ;
+          }
+
+          // Update U_out_c with the new Q
+          U_out(0,glas2::range(0,rank)) = H(glas2::range(0,rank),0) + value_type(0.,1.0) * H(glas2::range(0,rank),1) ;
+        }
+        assert( Q.num_columns()>=rank ) ;
+        assert( U_out.num_columns()>=rank ) ;
+        {
+          glas2::range r_rank(0,rank) ;
+          auto Zr = U_out( glas2::range_from_end(1,0), r_rank ) ;
+          auto z_0 = U_out(0, r_rank) ;
+        //std::cout << "Zr " << Zr << std::endl ;
+        //std::cout << "z_0 " << z_0 << std::endl ;
+
+          glas2::matrix< value_type > accum( Zr.num_rows(), Zr.num_columns() ) ;
+          basis_.lower_solve_right_hand_side( z_0, accum ) ;
+          basis_.solve( accum ) ;
+          Zr -= accum ;
+        //std::cout << "Zr accum " << Zr << std::endl ;
+        }
+      } // krylov_step()
+
+    public:
+      template <typename UUIn, typename UUOut>
+      void full_krylov_step( UUIn const& U_in, UUOut U_out ) {
+        glas2::all all ;
+        assert( U_in.num_columns()==size() ) ;
+        assert( U_out.num_columns()==size() ) ;
+        assert( U_in.num_rows()==size_of_basis() ) ;
+        assert( U_out.num_rows()==size_of_basis() ) ;
+
+        auto w = U_out( 0, all ) ;
+        {
+          auto Zr = U_out( glas2::range_from_end(1,0), all ) ;
+          basis_.multiply_N( U_in, Zr ) ;
+          basis_.solve( Zr ) ;
+
+          // Compute right-hand side for solve with P.
+          glas2::fill( w, 0.0 ) ;
+
+          coefficient_matrices::coefficient_matrices4CORK< value_type, coefficient_matrices_type > coefficient_matrices_4cork( coefficient_matrices_ ) ;
+          coefficient_matrices_4cork.initialize_schedule( transpose(U_in), glas2::range(1,coefficient_matrices_.num_matrices() ) ) ;
+
+          // Compute B-terms for the right-hand side.
+          matrix_iterator_.schedule_b_0( coefficient_matrices_4cork.accumulator(), [&U_in] (auto i) { return U_in(i, glas2::all()) ; } ) ;
+          value_type s = shift() ;
+          matrix_iterator_.schedule_b_1( coefficient_matrices_4cork.accumulator(), [&Zr,&s] (auto i) { return s * Zr(i-1, glas2::all()) ; } ) ;
+
+          // Compute A-terms for the right-hand side.
+          matrix_iterator_.schedule_a_1( coefficient_matrices_4cork.accumulator(), [&Zr] (auto i) { return -Zr(i-1, glas2::all()) ; } ) ;
+
+          coefficient_matrices_4cork.apply_schedule( coefficient_matrices_, glas2::eye(size(),size()), w ) ;
+
+//          w *= -1.0 ;
+
+          // Do the solve
+          linear_solver_.solve( w ) ;
+          ++information_.number_of_solves ;
+          auto norm_q = norm_2(w) ;
+        }
+        {
+          auto Zr = U_out( glas2::range_from_end(1,0), all ) ;
+          auto z_0 = U_out(0, all) ;
+
+          glas2::matrix< value_type > accum( Zr.num_rows(), Zr.num_columns() ) ;
+          basis_.lower_solve_right_hand_side( z_0, accum ) ;
+          basis_.solve( accum ) ;
+          Zr -= accum ;
+        }
+      } // full_krylov_step()
+
+    private:
+      Basis4CORK                       basis_ ;
+      MatrixIterator                   matrix_iterator_ ;
+      CoefficientMatrices              coefficient_matrices_ ;
+      //coefficient_matrices_4cork_type  coefficient_matrices_4cork_ ;
+      LinearSolver                     linear_solver_ ;
+      info&                            information_ ;
+  } ; // default_linearization
+
+
+} } // namespace CORK::linearization
+
+#endif

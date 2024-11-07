@@ -1,0 +1,5 @@
+blas.cpp:8:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+1 error generated.
+make: *** [blas.o] Error 1

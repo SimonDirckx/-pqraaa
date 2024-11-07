@@ -1,0 +1,63 @@
+// BEACH: Include this file if lapack-clashes occur between Eigen and Boost
+//
+// This file is an modification of the original file of the
+// same name from the Eigen C++ library. The original file
+// falls under the MPL 2.0 license. The original license 
+// information is included below:
+//
+// This file is part of Eigen, a lightweight C++ template library
+// for linear algebra.
+//
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+#ifndef EIGEN_ALT_QR_MODULE_H
+#define EIGEN_ALT_QR_MODULE_H
+
+#include <Eigen/Core>
+
+#include <PQRAAA/linalg/Eigen-alt/Cholesky>
+#include <Eigen/Jacobi>
+#include <Eigen/Householder>
+
+#include <Eigen/src/Core/util/DisableStupidWarnings.h>
+
+/** \defgroup QR_Module QR module
+  *
+  *
+  *
+  * This module provides various QR decompositions
+  * This module also provides some MatrixBase methods, including:
+  *  - MatrixBase::householderQr()
+  *  - MatrixBase::colPivHouseholderQr()
+  *  - MatrixBase::fullPivHouseholderQr()
+  *
+  * \code
+  * #include <Eigen/QR>
+  * \endcode
+  */
+
+#include <Eigen/src/QR/HouseholderQR.h>
+#include <Eigen/src/QR/FullPivHouseholderQR.h>
+#include <Eigen/src/QR/ColPivHouseholderQR.h>
+#include <Eigen/src/QR/CompleteOrthogonalDecomposition.h>
+#ifdef EIGEN_USE_LAPACKE
+  #ifdef EIGEN_USE_MKL
+    #include "mkl_lapacke.h"
+  #else
+    #ifdef BEACHPACK_USE_ALT_LAPACK_BINDINGS
+      // These are also used in Boost.Numeric.Bindings and the definitions have to match
+      #define lapack_complex_float std::complex<float>
+      #define lapack_complex_double std::complex<double>
+    #endif
+    // Alternative to Eigen/src/misc/lapacke.h without lapack-bindings
+    #include <PQRAAA/linalg/Eigen-alt/lapacke.h>
+  #endif
+#include <Eigen/src/QR/HouseholderQR_LAPACKE.h>
+#include <Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h>
+#endif
+
+#include <Eigen/src/Core/util/ReenableStupidWarnings.h>
+
+#endif // EIGEN_ALT_QR_MODULE_H

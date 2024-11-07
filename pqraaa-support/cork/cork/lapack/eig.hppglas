@@ -1,0 +1,237 @@
+//  (C) Copyright Karl Meerbergen 2007. 
+//  Use, modification and distribution are subject to the 
+//  GLAS Software License, Version 1.0. (See accompanying file 
+//  LICENSE_1_0.txt)
+
+#ifndef glas_toolbox_lapack_algorithm_eig_hpp
+#define glas_toolbox_lapack_algorithm_eig_hpp
+
+#include <glas/config.hpp>
+#define GLAS_MY_INCLUDE_LEVEL GLAS_INCLUDE_TOOLBOX
+#include <glas/concept/check_include_level.hpp>
+
+#include <glas/container/dense_vector.hpp>
+#include <glas/container/dense_matrix.hpp>
+#include <glas/toolbox/lapack/concept/uplo_char.hpp>
+#include <glas/toolbox/lapack/concept/is_real.hpp>
+#include <glas/toolbox/lapack/concept/is_complex.hpp>
+#include <glas/operators/all.hpp>
+#include <glas/algorithm/column.hpp>
+#include <glas/algorithm/real.hpp>
+#include <glas/algorithm/imag.hpp>
+#include <glas/algorithm/elt_divide.hpp>
+#include <glas/algorithm/uplo.hpp>
+#include <glas/bindings/adaptor.hpp>
+#include <glas/concept/leading_dimension.hpp>
+#include <glas/concept/num_rows.hpp>
+#include <glas/concept/num_columns.hpp>
+#include <glas/concept/pass_by_value_argument.hpp>
+#include <glas/concept/reference_argument.hpp>
+#include <glas/concept/size.hpp>
+#include <glas/concept/stride.hpp>
+#include <glas/concept/structure.hpp>
+#include <glas/concept/storage_ptr.hpp>
+#include <glas/concept/value_type.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/numeric/bindings/lapack/driver/geev.hpp>
+#include <boost/numeric/bindings/lapack/driver/syev.hpp>
+#include <boost/numeric/bindings/lapack/driver/ggev.hpp>
+#include <cassert>
+
+#undef GLAS_INCLUDE_LEVEL
+#define GLAS_INCLUDE_LEVEL GLAS_INCLUDE_TOOLBOX
+
+namespace glas { namespace lapack {
+
+  namespace detail {
+
+#ifdef GLAS_COMPLEX
+    template <typename A, typename X, typename E>
+    int eig( A& a, X& x, E& e, general_tag, typename boost::enable_if< is_real<typename glas::value_type<A>::type>, int >::type i=0 ) {
+      typedef typename glas::value_type<A>::type value_type ;
+      glas::dense_vector< value_type > beta( glas::size(e) ) ;
+      glas::dense_vector< value_type > wr( glas::size(e) ) ;
+      glas::dense_vector< value_type > wi( glas::size(e) ) ;
+      glas::dense_matrix< value_type > xr( glas::size(e), glas::size(e) ) ;
+
+      int info = ::boost::numeric::bindings::lapack::geev( 'N', 'V', a, wr, wi, xr, xr ) ;
+      if (info) return info ;
+      for ( int i=0; i<glas::size(e); ++i ) e(i) = std::complex<value_type>( wr(i), wi(i) ) ;
+      for ( int i=0; i<glas::size(e); ++i ) {
+        glas::real( column(x, i) ) = glas::column( xr, i ) ;
+        if ( wi(i)!=0.0 ) {
+          glas::real( column(x, i+1) ) = glas::column( xr, i ) ;
+          glas::imag( column(x, i) ) = glas::column( xr, i+1 ) ;
+          glas::imag( column(x, i+1) ) = glas::column( xr, i+1 ) ;
+          glas::imag( column(x, i+1) ) *= -1.0 ;
+          ++i ;
+        } else {
+          glas::imag( column(x, i) ) = 0.0 ;
+        }
+      }
+      return info ;
+    }
+
+    template <typename A, typename X, typename E>
+    int eig( A& a, X& x, E& e, general_tag, typename boost::enable_if< is_complex<typename glas::value_type<A>::type>, int >::type i=0 ) {
+      glas::dense_vector< typename glas::value_type<A>::type > beta( glas::size(e) ) ;
+
+      return ::boost::numeric::bindings::lapack::geev( 'N', 'V', a, e, x, x ) ;
+    }
+#endif
+
+
+    template <typename A, typename X, typename E>
+    int eig( A& a, X& x, E& e, symmetric_tag, typename boost::enable_if< is_real<typename glas::value_type<A>::type>, int >::type i=0 ) {
+      typedef typename glas::value_type<A>::type      value_type ;
+
+      // This is a bug fix
+      typedef typename A::argument_type               a_type ;
+      typedef typename structure_type< a_type >::type s_type ;
+      
+      typename glas::uplo_result_type< X, s_type >::type x_symm( glas::uplo< s_type>( x ) ) ;
+      x_symm = a.argument() ; // Assignment should be:
+      // x_symm = glas::uplo<s_type>(a) ;
+
+      return ::boost::numeric::bindings::lapack::syev( 'V', x_symm, e ) ;
+    } // eig()
+
+
+#ifdef GLAS_COMPLEX
+    template <typename A, typename B, typename X, typename E>
+    int eig( A& a, B& b, X& x, E& e, general_tag, general_tag
+           , typename boost::enable_if< boost::mpl::and_< is_real<typename glas::value_type<X>::type>
+                                                        , is_real<typename glas::value_type<A>::type>
+                                                        >, int >::type i=0 ) {
+      typedef typename glas::value_type<A>::type value_type ;
+      glas::dense_vector< value_type > beta( glas::size(e) ) ;
+      glas::dense_vector< value_type > alphar( glas::size(e) ) ;
+      glas::dense_vector< value_type > alphai( glas::size(e) ) ;
+
+      int info = ::boost::numeric::bindings::lapack::ggev( 'N', 'V', a, b, alphar, alphai, beta, x, x ) ;
+      if (info) return info ;
+      for ( int i=0; i<glas::size(e); ++i ) e(i) = std::complex<value_type>( alphar(i), alphai(i) ) / beta(i) ;
+      return info ;
+    }
+
+    template <typename A, typename B, typename X, typename E>
+    int eig( A& a, B& b, X& x, E& e, general_tag, general_tag
+           , typename boost::enable_if< boost::mpl::and_< is_complex<typename glas::value_type<X>::type>
+                                                        , is_real<typename glas::value_type<A>::type>
+                                                        >, int >::type i=0 ) {
+      typedef typename glas::value_type<A>::type value_type ;
+      glas::dense_vector< value_type > beta( glas::size(e) ) ;
+      glas::dense_vector< value_type > alphar( glas::size(e) ) ;
+      glas::dense_vector< value_type > alphai( glas::size(e) ) ;
+      glas::dense_matrix< value_type > xr( glas::size(e), glas::size(e) ) ;
+
+      int info = ::boost::numeric::bindings::lapack::ggev( 'N', 'V', a, b, alphar, alphai, beta, xr, xr ) ;
+      if (info) return info ;
+      for ( int i=0; i<glas::size(e); ++i ) e(i) = std::complex<value_type>( alphar(i), alphai(i) ) / beta(i) ;
+      for ( int i=0; i<glas::size(e); ++i ) {
+        glas::real( column(x, i) ) = column( xr, i ) ;
+        if ( alphai(i)!=0.0 ) {
+          glas::real( column(x, i+1) ) = column( xr, i ) ;
+          glas::imag( column(x, i) ) = column( xr, i+1 ) ;
+          glas::imag( column(x, i+1) ) = glas::negate( column( xr, i+1 ) ) ;
+          ++i ;
+        } else {
+          glas::imag( column(x, i) ) = 0.0 ;
+        }
+      }
+      return info ;
+    }
+
+    template <typename A, typename B, typename X, typename E>
+    int eig( A& a, B& b, X& x, E& e, general_tag, general_tag, typename boost::enable_if< is_complex<typename glas::value_type<A>::type>, int >::type i=0 ) {
+      glas::dense_vector< typename glas::value_type<A>::type > beta( glas::size(e) ) ;
+
+      int info = ::boost::numeric::bindings::lapack::ggev( 'N', 'V', a, b, e, beta, x, x ) ;
+      if (info) return info ;
+      for ( int i=0; i<glas::size(e); ++i ) e(i) /= beta(i) ;
+      return info ;
+    }
+#endif
+  } // namespace detail
+
+  //
+  // Generic function eig (as in Matlab)
+  // Compute the eigendecomposition
+  //  A X = X E
+  // where E is diagonal and complex (even when A and B are real)
+  //
+  // Concept requirements:
+  // StridedDenseMatrixCollection(A)
+  // StridedDenseMatrixCollection(X)
+  // StridedDenseVectorCollection(E) (E and X must be complex valued)
+  //
+  // This function dispatches depending on the structures of A and B
+  //
+  template <typename A, typename X, typename E>
+  typename boost::enable_if< boost::mpl::and_< reference_argument<A>
+                                             , reference_argument< X >
+                                             , reference_argument< E >
+                                             >
+                           , int>::type eig( A& a, X& x, E& e ) {
+    assert( glas::num_rows(a)==num_columns(a) ) ;
+
+    assert( glas::num_rows(a)==num_rows(x) ) ;
+    assert( glas::num_rows(a)==num_columns(x) ) ;
+
+    assert( glas::num_rows(a)==size(e) ) ;
+
+    return detail::eig( a, x, e, typename structure_type<A>::type() ) ;
+  } // eig()
+
+
+  template <typename A, typename X, typename E>
+  typename boost::enable_if< boost::mpl::and_< pass_by_value_argument<A>
+                                             , reference_argument< X >
+                                             , reference_argument< E >
+                                             >
+                           , int>::type eig( A a, X& x, E& e ) {
+    assert( glas::num_rows(a)==num_columns(a) ) ;
+
+    assert( glas::num_rows(a)==num_rows(x) ) ;
+    assert( glas::num_rows(a)==num_columns(x) ) ;
+
+    assert( glas::num_rows(a)==size(e) ) ;
+
+    return detail::eig( a, x, e, typename structure_type<A>::type() ) ;
+  } // eig()
+
+
+  //
+  // Generic function eig (as in Matlab)
+  // Compute the eigendecomposition
+  //  A X = B X E
+  // where E is diagonal and complex (even when A and B are real)
+  //
+  // Concept requirements:
+  // StridedDenseMatrixCollection(A)
+  // StridedDenseMatrixCollection(B)
+  // StridedDenseMatrixCollection(X)
+  // StridedDenseVectorCollection(E) (E and X must be complex valued)
+  //
+  // This function dispatches depending on the structures of A and B
+  //
+  template <typename A, typename B, typename X, typename E>
+  int eig( A& a, B& b, X& x, E& e ) {
+    assert( glas::num_rows(a)==num_columns(a) ) ;
+
+    assert( glas::num_rows(a)==num_rows(b) ) ;
+    assert( glas::num_rows(a)==num_columns(b) ) ;
+
+    assert( glas::num_rows(a)==num_rows(x) ) ;
+    assert( glas::num_rows(a)==num_columns(x) ) ;
+
+    assert( glas::num_rows(a)==size(e) ) ;
+
+    return detail::eig( a, b, x, e, typename structure_type<A>::type(), typename structure_type<B>::type() ) ;
+  } // eig()
+
+} } // namespace glas::lapack
+
+#endif

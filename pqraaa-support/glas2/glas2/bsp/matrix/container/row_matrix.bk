@@ -1,0 +1,101 @@
+//Zifan Liu, zifan.liu@cs.kuleuven.be
+//Parallel Dense matrix
+
+#ifndef glas2_bsp_matrix_container_row_matrix_hpp
+#define glas2_bsp_matrix_container_row_matrix_hpp
+
+//#include <glas2/bsp/matrix/type/row_distributed_matrix.hpp>
+#include <glas2/bsp/matrix/concept/bsp_row_matrix.hpp>
+//#include <glas2/matrix/type/contiguous_matrix.hpp>
+
+namespace glas2 { namespace bsp {
+
+  template <typename T, typename Distribution>
+  class row_matrix
+  {
+    /*public:
+      typedef row_distributed_matrix< contiguous_matrix<T,S,O>, Distribution > base_type ;
+      typedef typename base_type::local_type                                   local_type ;
+      typedef typename local_type::size_type                                   size_type ;
+	*/
+    private:
+	Distribution & d ;
+	unsigned int gnbRows, gnbCols;
+	T **mat;//Local matrix data
+    public:
+      row_matrix( unsigned int m, unsigned int n, Distribution & dd  )
+	      : d(dd), gnbRows(m), gnbCols(n)
+      {
+	     mat = new T*[d.getSize()];
+	     for (int i = 0; i < d.getSize(); i++)
+		    mat[i] = new T[gnbCols]; 
+      
+      }
+
+      // Copy reference !!
+    /*  row_matrix( row_matrix const& that )
+      : base_type( that )
+      , owner_( false )
+      {}*/
+
+      ~row_matrix() {
+/*#ifndef NDEBUG
+        if (owner_) std::cout << "Calling destructor BSP::ROW_MATRIX" << std::endl ;
+#endif
+        if (owner_) delete [] this->local().ptr() ;*/
+	      for (int i = 0; i < d.getSize(); ++i)
+		      delete [] mat[i];
+	      delete [] mat;
+      }
+
+      bool isLocal (unsigned int gid) {
+	if ((gid >= d.getMinLocalGid()) && (gid<= d.getMaxLocalGid()))
+		return true;
+      	else
+		return false;
+	}
+
+      void setValue(unsigned int rid, unsigned int cid, T val) {
+		mat[rid-d.getMinLocalGid()][cid] = val;
+      }
+
+      T getValue(unsigned int rid, unsigned int cid) {
+	      return mat[rid-d.getMinLocalGid()][cid];
+
+      }
+
+      /*
+    public:
+      row_matrix operator=( row_matrix const& that ) {
+        base_type(*this) = that ;
+        return *this ;
+      }
+
+      template <typename E>
+      row_matrix operator=( E const& that ) {
+        base_type(*this) = that ;
+        return *this ;
+      }
+
+    private:
+      bool owner_ ;*/
+  } ;
+
+} } // namespace glas2::bsp
+
+/*
+namespace glas2 {
+
+  template <typename D, typename T, typename O>
+  struct concept< bsp::row_matrix<D,T,O> >
+  : bsp::BSPRowMatrix
+  {};*/
+
+/*  template <typename Tag, typename T, typename O>
+  struct matrix_transform< Tag, shared_matrix<T,O> >
+  : matrix_transform< Tag, typename shared_matrix<T,O>::base_type >
+  {} ;
+
+} // namespace glas2
+*/
+#endif

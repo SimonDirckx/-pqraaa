@@ -1,0 +1,328 @@
+CXXFLAGS =      -fno-exceptions -pedantic -fprefetch-loop-arrays -fopenmp  -I/Users/karlm/soft/SL_1.6.0/
+LDFLAGS =   
+LIBS =  -L/Users/karlm/soft/SL_1.6.0 -lsl_1_6 -lstdc++
+
+all:
+	ar -r libSL_1_6.a   /Users/karlm/soft/glas/SL_1.6.0/CuHyb.o /Users/karlm/soft/glas/SL_1.6.0/FileToVT.o /Users/karlm/soft/glas/SL_1.6.0/MachineInfo.o /Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.o /Users/karlm/soft/glas/SL_1.6.0/McDMV.o /Users/karlm/soft/glas/SL_1.6.0/McDirect.o /Users/karlm/soft/glas/SL_1.6.0/McShared.o /Users/karlm/soft/glas/SL_1.6.0/SBDTree.o /Users/karlm/soft/glas/SL_1.6.0/driver.o /Users/karlm/soft/glas/SL_1.6.0/micbench.o /Users/karlm/soft/glas/SL_1.6.0/mm2htrp.o /Users/karlm/soft/glas/SL_1.6.0/mmio.o /Users/karlm/soft/glas/SL_1.6.0/mtx2crstrp.o /Users/karlm/soft/glas/SL_1.6.0/sbd2trp-main.o /Users/karlm/soft/glas/SL_1.6.0/sbdmv.o /Users/karlm/soft/glas/SL_1.6.0/util.o
+
+CUHYB_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/CuHyb.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp
+
+CuHyb.o : CuHyb.cpp $(CUHYB_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o CuHyb.o CuHyb.cpp
+
+
+
+FILETOVT_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp
+
+FileToVT.o : FileToVT.cpp $(FILETOVT_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o FileToVT.o FileToVT.cpp
+
+
+
+MACHINEINFO_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/MachineInfo.hpp
+
+MachineInfo.o : MachineInfo.cpp $(MACHINEINFO_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o MachineInfo.o MachineInfo.cpp
+
+
+
+MATRIX2HILBERTCOORDINATES_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp
+
+Matrix2HilbertCoordinates.o : Matrix2HilbertCoordinates.cpp $(MATRIX2HILBERTCOORDINATES_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o Matrix2HilbertCoordinates.o Matrix2HilbertCoordinates.cpp
+
+
+
+MCDMV_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Upscaler.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SBDTree.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MinCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BlockOrderer.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CCSWrapper.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/TS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ZZ_CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ZZ_ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SVM.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HTS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTriplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTripletCompare.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BetaHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MachineInfo.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/RDBHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/sim_api.h\
+	/Users/karlm/soft/glas/SL_1.6.0/BigInt.hpp
+
+McDMV.o : McDMV.cpp $(MCDMV_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o McDMV.o McDMV.cpp
+
+
+
+MCDIRECT_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CCSWrapper.hpp
+
+McDirect.o : McDirect.cpp $(MCDIRECT_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o McDirect.o McDirect.cpp
+
+
+
+MCSHARED_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Hilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTriplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTripletCompare.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CCSWrapper.hpp
+
+McShared.o : McShared.cpp $(MCSHARED_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o McShared.o McShared.cpp
+
+
+
+SBDTREE_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/SBDTree.hpp
+
+SBDTree.o : SBDTree.cpp $(SBDTREE_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o SBDTree.o SBDTree.cpp
+
+
+
+DRIVER_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/TS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/vecBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ZZ_CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ZZ_ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SVM.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HTS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTriplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTripletCompare.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CCSWrapper.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Hilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BlockHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BetaHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MachineInfo.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/RDBHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/sim_api.h\
+	/Users/karlm/soft/glas/SL_1.6.0/BigInt.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BisectionHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/RDScheme.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/McCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CompressedHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/custom_quicksort.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertArray.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MKLCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CuHyb.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/RDCSB.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/utility.h\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/triple.h\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/csc.h\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/bicsb.h
+
+driver.o : driver.cpp $(DRIVER_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o driver.o driver.cpp
+
+
+
+MICBENCH_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/vecBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/RDBHilbert.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/sim_api.h\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MachineInfo.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BigInt.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/TS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/RDCSB.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/utility.h\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/triple.h\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/csc.h\
+	/Users/karlm/soft/glas/SL_1.6.0/csb/bicsb.h
+
+micbench.o : micbench.cpp $(MICBENCH_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o micbench.o micbench.cpp
+
+
+
+MM2HTRP_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/HTS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTriplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTripletCompare.hpp
+
+mm2htrp.o : mm2htrp.cpp $(MM2HTRP_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o mm2htrp.o mm2htrp.cpp
+
+
+
+MMIO_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h
+
+mmio.o : mmio.cpp $(MMIO_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o mmio.o mmio.cpp
+
+
+
+MTX2CRSTRP_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/TS.hpp
+
+mtx2crstrp.o : mtx2crstrp.cpp $(MTX2CRSTRP_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o mtx2crstrp.o mtx2crstrp.cpp
+
+
+
+SBD2TRP-MAIN_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/util.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MinCCS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BlockOrderer.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SBDTree.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BlockCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/U2.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Duck.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SepLast.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MinCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp
+
+sbd2trp-main.o : sbd2trp-main.cpp $(SBD2TRP-MAIN_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o sbd2trp-main.o sbd2trp-main.cpp
+
+
+
+SBDMV_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ULIdef.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/FileToVT.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/mmio.h\
+	/Users/karlm/soft/glas/SL_1.6.0/CS_Triplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HBICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SparseMatrix.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/alignment.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/TS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ZZ_CRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/ZZ_ICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SVM.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HTS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTriplet.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Matrix2HilbertCoordinates.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/HilbertTripletCompare.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BICRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/CCSWrapper.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MinCCS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BlockOrderer.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SBDTree.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/MinCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/BlockCRS.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/U2.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/Duck.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/SepLast.hpp\
+	/Users/karlm/soft/glas/SL_1.6.0/util.hpp
+
+sbdmv.o : sbdmv.cpp $(SBDMV_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o sbdmv.o sbdmv.cpp
+
+
+
+UTIL_DEPS = \
+	/Users/karlm/soft/glas/SL_1.6.0/util.hpp
+
+util.o : util.cpp $(UTIL_DEPS)
+	@g++ -c -std=c++11 -Wall   -O3 -fprefetch-loop-arrays -funroll-loops -ffast-math -DNDEBUG $(CXXFLAGS) -o util.o util.cpp
+
+

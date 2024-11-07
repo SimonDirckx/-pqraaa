@@ -1,0 +1,3 @@
+// BEACH: Include this file if lapack-clashes occur between Eigen and Boost
+#include <BEACHpack/linalg/Eigen-alt/Dense>
+#include <Eigen/Sparse>

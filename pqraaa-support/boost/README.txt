@@ -1,0 +1,1 @@
+This directory contains a modified version of Boost.Numeric.Bindings retrieved from the CORK package located on KULeuven's SCM server: https://scm.cs.kuleuven.be/scm/git/cork. It corresponds to the version located at 'boost-new' in https://gitlab.kuleuven.be/u0156790/lapack-c-bindings. More information on the modifications can be found there.

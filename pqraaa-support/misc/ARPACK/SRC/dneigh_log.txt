@@ -1,0 +1,1 @@
+make: 'dneigh.o' is up to date.

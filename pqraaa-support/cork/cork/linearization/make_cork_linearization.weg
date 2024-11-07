@@ -1,0 +1,49 @@
+//  (C) Copyright Roel Van Beeumen, Wim Michiels & Karl Meerbergen 2016.
+//  Use, modification and distribution are subject to the 
+//  CORK Software License, Version 1.0. (See accompanying file 
+//  LICENSE_1_0.txt)
+
+#ifndef cork_linearization_make_cork_linearization_hpp
+#define cork_linearization_make_cork_linearization_hpp
+
+#include <cork/linearization/cork_linearization.hpp>
+#include <cork/matrix_valued_function/linear_solver.hpp>
+#include <cork/matrix_iterator/matrix_iterator.hpp>
+#include <cork/basis4cork/basis4cork.hpp>
+#include <type_traits>
+
+namespace CORK { namespace linearization {
+
+  template <typename ShiftValueType, typename KrylovValueType, typename MatrixPolynomial>
+  decltype(auto) make_cork_linearization( MatrixPolynomial const& m, info& information ) {
+    static_assert( std::is_convertible< KrylovValueType, ShiftValueType >::value
+                 , "CORK::linearization::cork_linearization: KrylovValueType cannot be converted to ShiftValueType"
+                 ) ;
+    static_assert( std::is_same< typename MatrixPolynomial::template value_type<KrylovValueType>, KrylovValueType >::value
+                 , "CORK::linearization::cork_linearization: KrylovValueType is not possible for this MatrixPolynomial"
+                 ) ;
+    auto linear_solver = matrix_valued_function::make_linear_solver<ShiftValueType>(m) ;
+    typedef typename decltype(linear_solver)::value_type solver_value_type ;
+    auto basis4cork = basis4CORK::basis4CORK< typename MatrixPolynomial::basis_type >( m.basis() ) ;
+    auto matrix_iterator = matrix_iterator::matrix_iterator< solver_value_type, typename MatrixPolynomial::basis_type >( m.basis() ) ;
+    return cork_linearization< decltype(basis4cork), decltype(matrix_iterator), decltype(m.coefficient_matrices()) const&, decltype(linear_solver) >( basis4cork, matrix_iterator, m.coefficient_matrices(), linear_solver, information ) ;
+  }
+
+  template <typename KrylovValueType, typename MatrixPolynomial, typename LinearSolver>
+  decltype(auto) make_cork_linearization( MatrixPolynomial const& m, LinearSolver& linear_solver, info& information ) {
+    typedef typename LinearSolver::value_type solver_value_type ;
+    static_assert( std::is_convertible< KrylovValueType, solver_value_type >::value
+                 , "CORK::linearization::cork_linearization: std::is_convertible< KrylovValueType, LinearSolver::value_type >::value failed"
+                 ) ;
+    static_assert( std::is_same< typename MatrixPolynomial::template value_type<KrylovValueType>, KrylovValueType >::value
+                 , "CORK::linearization::cork_linearization: KrylovValueType is not possible for this MatrixPolynomial"
+                 ) ;
+    matrix_valued_function::linear_solver< decltype(m.basis()), LinearSolver& > solver( m.basis(), linear_solver ) ;
+    auto basis4cork = basis4CORK::basis4CORK< typename MatrixPolynomial::basis_type >( m.basis() ) ;
+    auto matrix_iterator = matrix_iterator::matrix_iterator< solver_value_type, typename MatrixPolynomial::basis_type >( m.basis() ) ;
+    return cork_linearization< decltype(basis4cork), decltype(matrix_iterator), decltype(m.coefficient_matrices()) const&, decltype(solver) >( basis4cork, matrix_iterator, m.coefficient_matrices(), solver, information ) ;
+  }
+
+} } // namespace CORK::linearization
+
+#endif

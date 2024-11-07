@@ -1,0 +1,65 @@
+];
+
+	lgnd  = {'BSP put  ','BSP hpput','BSP get  ','BSP hpget','MPI put  ','MPI get  ','MPI allgather'};
+	large = data( 4:4:end ); %ignore all data except for the ones corresponding to RAM data movement
+	large = reshape( large, 3, 7 );
+	check = permute( reshape( log10(data), 4, 3, 7 ), [1 3 2] );
+
+	figure(1);
+	bar( large(1,:) );
+	xlabel( 'Communication method' );
+	set( gca, 'XTick', 1:7 );
+	set( gca, 'xticklabel', lgnd );
+	ylabel( 'Speed (in ms.)' );
+	title( 'Comparing all-to-all communication performance using different primitives' );
+
+	figure(2);
+	bar( large(2,:) );
+	xlabel( 'Communication method' );
+	lgnd(7)='MPI gather';
+	set( gca, 'XTick', 1:7 );
+	set( gca, 'xticklabel', lgnd );
+	ylabel( 'Speed (in ms.)' );
+	title( 'Comparing all-to-one communication performance using different primitives' );
+
+	figure(3);
+	bar( large(3,:) );
+	xlabel( 'Communication method' );
+	lgnd(7)='MPI bcast';
+	set( gca, 'XTick', 1:7 );
+	set( gca, 'xticklabel', lgnd );
+	ylabel( 'Speed (in ms.)' );
+	title( 'Comparing one-to-all communication performance using different primitives' );
+
+	figure(4)
+	bar( check(:,:,1), 'grouped' );
+	lgnd(7)='MPI allgather';
+	legend( lgnd );
+	xlabel( 'Communication size' );
+	set( gca, 'XTick', 1:4 );
+	set( gca, 'xticklabel', {'L1','L2','L3','RAM'} );
+	ylabel( 'Speed (log10(ms).)' );
+	title( 'Comparing all-to-all communication performance of different sizes' );
+
+	figure(5)
+	bar( check(:,:,2), 'grouped' );
+	lgnd(7)='MPI gather';
+	legend( lgnd );
+	xlabel( 'Communication size' );
+	set( gca, 'XTick', 1:4 );
+	set( gca, 'xticklabel', {'L1','L2','L3','RAM'} );
+	ylabel( 'Speed (log10(ms).)' );
+	title( 'Comparing all-to-one communication performance of different sizes' );
+
+	figure(6)
+	bar( check(:,:,3), 'grouped' );
+	lgnd(7)='MPI bcast';
+	legend( lgnd );
+	xlabel( 'Communication size' );
+	set( gca, 'XTick', 1:4 );
+	set( gca, 'xticklabel', {'L1','L2','L3','RAM'} );
+	ylabel( 'Speed (log10(ms).)' );
+	title( 'Comparing one-to-all communication performance of different sizes' );
+
+end
+

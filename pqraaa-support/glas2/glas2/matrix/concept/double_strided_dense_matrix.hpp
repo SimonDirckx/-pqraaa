@@ -1,0 +1,28 @@
+//  (C) Copyright Karl Meerbergen 2014.
+//  Use, modification and distribution are subject to the 
+//  GLAS Software License, Version 1.0. (See accompanying file 
+//  LICENSE_1_0.txt)
+
+#ifndef glas2_matrix_concept_double_strided_dense_matrix_hpp
+#define glas2_matrix_concept_double_strided_dense_matrix_hpp
+
+#include <glas2/matrix/concept/dense_matrix.hpp>
+
+namespace glas2 {
+
+  struct DoubleStridedDenseMatrix
+  : DenseMatrix
+  {
+    typedef DoubleStridedDenseMatrix type ;
+  } ;
+
+  // concept StridedDenseMatrix
+  // orientation
+  // size_type stride_rows()
+  // size_type stride_columns()
+  // value_type* storage_ptr()
+  // value_type const* storage_ptr()
+
+} // namespace glas
+
+#endif
