@@ -1,4 +1,4 @@
-// BEACH: Include this file if lapack-clashes occur between Eigen and Boost
+// PQRAAA: Include this file if lapack-clashes occur between Eigen and Boost
 //
 // This file is an modification of the original file of the
 // same name from the Eigen C++ library. The original file
@@ -38,7 +38,7 @@
 #ifdef EIGEN_USE_MKL
 #include "mkl_lapacke.h"
 #else
-#include <BEACHpack/linalg/Eigen-alt/lapacke.h> // Alternative without lapack-bindings
+#include <PQRAAA/linalg/Eigen-alt/lapacke.h> // Alternative without lapack-bindings
 #endif
 #include <Eigen/src/LU/PartialPivLU_LAPACKE.h>
 #endif

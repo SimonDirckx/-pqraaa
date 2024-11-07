@@ -1,4 +1,4 @@
-// BEACH: Include this file if lapack-clashes occur between Eigen and Boost
+// PQRAAA: Include this file if lapack-clashes occur between Eigen and Boost
 //
 // This file is an modification of the original file of the
 // same name from the Eigen C++ library. The original file
@@ -17,10 +17,10 @@
 
 #include <Eigen/Core>
 
-#include <BEACHpack/linalg/Eigen-alt/Cholesky>
+#include <PQRAAA/linalg/Eigen-alt/Cholesky>
 #include <Eigen/Jacobi>
 #include <Eigen/Householder>
-#include <BEACHpack/linalg/Eigen-alt/LU>
+#include <PQRAAA/linalg/Eigen-alt/LU>
 #include <Eigen/Geometry>
 
 #include <Eigen/src/Core/util/DisableStupidWarnings.h>
@@ -55,13 +55,13 @@
   #ifdef EIGEN_USE_MKL
     #include "mkl_lapacke.h"
   #else
-    #ifdef BEACHPACK_USE_ALT_LAPACK_BINDINGS
+    #ifdef PQRAAA_USE_ALT_LAPACK_BINDINGS
       // These are also used in Boost.Numeric.Bindings and the definitions have to match
       #define lapack_complex_float std::complex<float>
       #define lapack_complex_double std::complex<double>
     #endif
     // Alternative to Eigen/src/misc/lapacke.h without lapack-bindings
-    #include <BEACHpack/linalg/Eigen-alt/lapacke.h>
+    #include <PQRAAA/linalg/Eigen-alt/lapacke.h>
   #endif
 #include <Eigen/src/Eigenvalues/RealSchur_LAPACKE.h>
 #include <Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h>

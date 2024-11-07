@@ -553,7 +553,7 @@ void TruncColPivHouseholderQR<MatrixType>::computeInPlace() {
         m_colNormsUpdated.coeffRef(k) = m_colNormsDirect.coeffRef(k);
     }
 
-    RealScalar threshold_helper =  numext::abs2<RealScalar>(m_colNormsUpdated.maxCoeff() * threshold()) ; // beachPACK: tolerance is defined as input, not just machine precision
+    RealScalar threshold_helper =  numext::abs2<RealScalar>(m_colNormsUpdated.maxCoeff() * threshold()) ; // pqraaa: tolerance is defined as input, not just machine precision
     if (m_useHeuristicStopCrit)
         threshold_helper /= RealScalar(rows);
     RealScalar norm_downdate_threshold = numext::sqrt(NumTraits<RealScalar>::epsilon());
@@ -573,10 +573,10 @@ void TruncColPivHouseholderQR<MatrixType>::computeInPlace() {
         if (m_useHeuristicStopCrit 
                 && m_nonzero_pivots == size && biggest_col_sq_norm < threshold_helper * RealScalar(rows-k)) {
             m_nonzero_pivots = k;
-            break ; // beachPACK: This is the singular change: break the loop once the rank is determined
+            break ; // pqraaa: This is the singular change: break the loop once the rank is determined
         } else if (m_nonzero_pivots == size && m_colNormsUpdated.tail(cols-k).squaredNorm() < threshold_helper) {
             m_nonzero_pivots = k;
-            break ; // beachPACK: This is the singular change: break the loop once the rank is determined
+            break ; // pqraaa: This is the singular change: break the loop once the rank is determined
         }
 
         // apply the transposition to the columns

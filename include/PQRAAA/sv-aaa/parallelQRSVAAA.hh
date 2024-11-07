@@ -4,8 +4,8 @@
 #include <complex>
 #include <cmath>
 
-#include <BEACHpack/Core>
-#include <BEACHpack/linalg/Eigen-alt/Dense>
+#include <PQRAAA/Core>
+#include <PQRAAA/linalg/Eigen-alt/Dense>
 
 #include <glas2/vector.hpp>
 #include <cork/matrix.hpp>

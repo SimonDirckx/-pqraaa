@@ -1,10 +1,10 @@
-#ifndef BEACHPACK_CORE_H
-#define BEACHPACK_CORE_H
+#ifndef PQRAAA_CORE_H
+#define PQRAAA_CORE_H
 //
-// Project     : BEACHpack
+// Project     : pqraaa
 // File        : Core
-// Description : Core BEACHpack module handling preprocessor macros
-// Author      : Kobe Bruyninckx
+// Description : Core pqraaa module handling preprocessor macros
+// Author      : Kobe Bruyninckx & Simon Dirckx
 // Copyright   : KU Leuven Dept. CS 2024.
 //
 
@@ -16,22 +16,22 @@
 /**
  * Define preprocessor macros
  */
-#ifdef BEACHPACK_EIGEN_USE_BLAS
+#ifdef PQRAAA_EIGEN_USE_BLAS
     // Forward use of BLAS to Eigen
     #ifndef EIGEN_USE_BLAS
         #define EIGEN_USE_BLAS
     #endif
 #endif
 
-#ifdef BEACHPACK_EIGEN_USE_LAPACKE
+#ifdef PQRAAA_EIGEN_USE_LAPACKE
     // Forward use of LAPACKE to Eigen
     #ifndef EIGEN_USE_LAPACKE
         #define EIGEN_USE_LAPACKE
     #endif
 #endif
 
-#ifdef BEACHPACK_USE_MKL
-    #ifndef BEACHPACK_EIGEN_NO_MKL
+#ifdef PQRAAA_USE_MKL
+    #ifndef PQRAAA_EIGEN_NO_MKL
         // Forward use of MKL to Eigen
         #ifndef EIGEN_USE_MKL_ALL
             #define EIGEN_USE_MKL_ALL
@@ -42,7 +42,7 @@
         #define BOOST_NUMERIC_BINDINGS_USE_MKL
     #endif
 #else
-    #if defined(BEACHPACK_USE_ALT_LAPACK_BINDINGS)
+    #if defined(PQRAAA_USE_ALT_LAPACK_BINDINGS)
         // Forward use of alternative LAPACK bindings to Boost.Numeric.Bindings
         #ifndef BOOST_NUMERIC_BINDINGS_USE_SYSTEM_LAPACK_H
             #define BOOST_NUMERIC_BINDINGS_USE_SYSTEM_LAPACK_H
@@ -89,9 +89,9 @@
             #define lapack_complex_double std::complex<double>
         #endif
         // Alternative to Eigen/src/misc/lapacke.h without lapack-bindings
-        #include <BEACHpack/linalg/Eigen-alt/lapacke.h>
+        #include <PQRAAA/linalg/Eigen-alt/lapacke.h>
     #endif
 #endif
 
 
-#endif // BEACHPACK_CORE_H
+#endif // PQRAAA_CORE_H
