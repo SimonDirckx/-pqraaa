@@ -16,6 +16,7 @@
 #include <cork/approximation/svd_aaa.hpp>
 #include <cork/approximation/svd_aaa_ls.hpp>
 #include <cork/approximation/sv_aaa_max.hpp>
+#include <cork/approximation/sv_aaa_2.hpp>
 #include <cork/approximation/unique_test_set.hpp>
 #include <cork/approximation/sv_aaa_2_partial_fractions.hpp>
 #include <cork/options/has_option.hpp>
