@@ -5,14 +5,14 @@ PQR-AAA is a package to construct Set-valued (aka vector-valued) rational approx
 ### Eigen
 PQR-AAA depends on the [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) library for its linear algebra, as well as a custom variant of a subset of the Eigen Library (can be found in 'pqraaa-support').
 ## Getting started with PQR-AAA
-# pre-loaded examples
+### pre-loaded examples
 In the 'examples' folder, 4 reference problems from the [NLEVP](https://github.com/ftisseur/nlevp) toolbox are included. After initial build, these can be compiled by running e.g.
 ```
 make examples/randomDelays
 ./examples/randomDelays
 ```
 from command line. These 4 examples run both SV-AAA and QR-AAA on parameter dependent systems, and compare the timings.
-# computing your own QR-AAA approximation
+### computing your own QR-AAA approximation
 Creating your own QR-AAA example can be done in 3 steps:
 * Include the correct headers and , for simplicity, define a number of aliases
 ```
