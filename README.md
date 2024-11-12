@@ -37,6 +37,6 @@ using Vec = Eigen::Vector<Tval,Eigen::Dynamic>;
 int N = 100000;
 int nZ = 1000;
 Eigen::ArrayXd Z = Eigen::ArrayXd::LinSpaced(nZ,-1.,1.);
-Mat<CTval> F = Mat<CTval>::Zero(nZ,N);
+Mat<complex<double>> F = Mat<complex<double>>::Zero(nZ,N);
 //fill F in some way...
 ```
