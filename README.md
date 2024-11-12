@@ -40,3 +40,13 @@ Eigen::ArrayXd Z = Eigen::ArrayXd::LinSpaced(nZ,-1.,1.);
 Mat<complex<double>> F = Mat<complex<double>>::Zero(nZ,N);
 //fill F in some way...
 ```
+
+* After possibly rescaling the columns of F (application dependent, but unit norm for each column is usually a good idea), set tolerance, set max_degree and compute the qr-aaa approximation
+```
+QRAAA::infoType info;
+QRAAA::AAAopts opts;
+opts.tol = tol;
+opts.max_degree = 30;
+auto repr_f=QRAAA::qr_aaa(F,Z,opts,info);
+QRAAA::summarize(info);
+```
