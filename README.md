@@ -9,9 +9,9 @@ PQR-AAA depends on the [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_
 In the 'examples' folder, 4 reference problems from the [NLEVP](https://github.com/ftisseur/nlevp) toolbox are included. After initial build, these can be compiled by running e.g.
 ```
 make examples/randomDelays
-./examples/randomDelays
+./examples/randomDelays 1
 ```
-from command line. These 4 examples run both SV-AAA and QR-AAA on parameter dependent systems, and compare the timings.
+from command line.  The boolean (here '1') determines whether qr-aaa is used. If '0', regular sv-aaa is used.
 ### computing your own QR-AAA approximation
 Creating your own QR-AAA example can be done in 3 steps:
 * Include the correct headers and , for simplicity, define a number of aliases
