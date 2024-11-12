@@ -48,5 +48,14 @@ QRAAA::AAAopts opts;
 opts.tol = tol;
 opts.max_degree = 30;
 auto repr_f=QRAAA::qr_aaa(F,Z,opts,info);
+```
+* Optionally, output the info of the qr-aaa approximation
+```
 QRAAA::summarize(info);
+```
+* The nodes, weights, and coefficients (as glas2 objects) of the qr-aaa approximation can be accessed by
+```
+auto nodes = repr_f.nodes()
+auto weights = repr_f.weights()
+auto coeffs = repr_f.coefficients()
 ```
