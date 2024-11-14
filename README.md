@@ -9,9 +9,9 @@ PQR-AAA depends on the [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_
 In the 'examples' folder, 4 reference problems from the [NLEVP](https://github.com/ftisseur/nlevp) toolbox are included. After initial build, these can be compiled by running e.g.
 ```
 make examples/randomDelays
-./examples/randomDelays 1
+./examples/randomDelays 1 4 1e-4
 ```
-from command line.  The boolean (here '1') determines whether qr-aaa is used. If '0', regular sv-aaa is used.
+from command line.  The boolean (here '1') determines whether qr-aaa is used. If '0', regular sv-aaa is used. The input '4' determines the number of cores used (1 corresponding to serial qr-aaa). The input '1e-4' determines the tolerance. NOTE: the current implementation still exhibits some false sharing.
 ### computing your own QR-AAA approximation
 Creating your own QR-AAA example can be done in 3 steps:
 * Include the correct headers and , for simplicity, define a number of aliases
@@ -41,13 +41,15 @@ Mat<complex<double>> F = Mat<complex<double>>::Zero(nZ,N);
 //fill F in some way...
 ```
 
-* After possibly rescaling the columns of F (application dependent, but unit norm for each column is usually a good idea), set tolerance, set max_degree and compute the qr-aaa approximation
+* After possibly rescaling the columns of F (application dependent, but unit norm for each column is usually a good idea), set tolerance, set max_degree, number of cores, whether to use qr (always true when n_cores>1) and compute the qr-aaa approximation
 ```
 QRAAA::infoType info;
 QRAAA::AAAopts opts;
 opts.tol = tol;
 opts.max_degree = 30;
-auto repr_f=QRAAA::qr_aaa(F,Z,opts,info);
+opts.qr = true;
+opts.n_cores = 1;
+auto repr_f=QRAAA::sv_aaa(F,Z,opts,info);
 ```
 * Optionally, output the info of the qr-aaa approximation
 ```
