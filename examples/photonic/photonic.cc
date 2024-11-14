@@ -30,37 +30,43 @@ using CTval = complex<Tval>;
 int main(int argc,char** argv){
     /*
     read (vectorized, conformally-structured) sparse matrices from .dat files
+    and set parameters from user-input
     */
+    ////////////////////////////////////////////////////////////////////////////////////////////
     char filenum[255];
-    bool qraaa;
+    bool qraaa      = false;
+    int  n_cores    = 1;
+    double tol      = 1e-8;
     if(argc==1){
-        strcpy(filenum,"5546");
-        qraaa=false;
-    }else if (argc==2)
-    {
+        strcpy(filenum,"168");
+    }else if (argc>=2){
         strcpy(filenum,argv[1]);
         if(!strcmp(filenum,"5546")==0 & !strcmp(filenum,"29034")==0 & !strcmp(filenum,"98442")==0){
             std::__throw_invalid_argument("ERROR: select 5546, 29034 or 98442");
             return 0;
         }
-        qraaa=false;
-    }else{
-        strcpy(filenum,argv[1]);
-        if(!strcmp(filenum,"5546")==0 & !strcmp(filenum,"29034")==0 & !strcmp(filenum,"98442")==0){
-            std::__throw_invalid_argument("ERROR: select 5546, 29034 or 98442");
-            return 0;
+        if(argc>=3){
+            bool qraaa = (strcmp(argv[2],"1")==0);
         }
-        qraaa = (strcmp(argv[2],"1")==0);
+        if(argc>=4){
+            n_cores = std::max(1,std::min(8,stoi(argv[3])));
+        }
+        if(argc>=5){
+            tol = stod(argv[4]);
+        }
     }
 
     char matfile[255] = "include/files/photonic/M_photonic_";
     strcat(strcat(matfile,filenum),".dat");
-
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
     /*
-    constants
+    construct F
 
     */
-
+    //////////////////////////////////////////////////////////////
+    
     double eps0=1.;
     double c=2.;
     double lamP1sq  =   1.4;
@@ -73,12 +79,6 @@ int main(int argc,char** argv){
     {   CTval z = CTval(0.,x);
         return c+(lamP1sq/(z*z+gamm1*z+lam01sq))+(lamP2sq/(z*z+gamm2*z+lam02sq));
     };
-
-
-    /*
-    fill F and scale cols
-
-    */
     double num; int n=atoi(filenum); int num_coeff = 3;
     
     ifstream fm,fb;
@@ -105,67 +105,43 @@ int main(int argc,char** argv){
         nrmVec(i) = F.col(i).norm();
         F.col(i)/=nrmVec(i);
     }
-    double tol = 1e-8;
-    
-    if(qraaa){
-        
-        QRAAA::infoType info;
-        QRAAA::AAAopts opts;
-        opts.tol = tol;
-        opts.max_degree = 20;
-        auto repr_f=QRAAA::qr_aaa(F,Z,opts,info);
-        QRAAA::summarize(info);
+    //////////////////////////////////////////////////////////////
+    /*
+    approximate & output info
+    */
+    //////////////////////////////////////////
+    QRAAA::infoType info;
+    QRAAA::AAAopts  opts;
+    opts.tol        = tol;
+    opts.max_degree = 20;
+    opts.qr         = true;
+    opts.n_cores    = n_cores;
+    auto repr_f     = QRAAA::sv_aaa(F,Z,opts,info);
+    QRAAA::summarize(info);
+    //////////////////////////////////////////
 
-
-        //validate
-
-        
-        int nZtest = 2513;   
-        Eigen::ArrayXd Ztest = Eigen::ArrayXd::LinSpaced(nZtest,0,10);
-        Vec<CTval> ftest = Vec<CTval>::Zero(N);
-        Vec<CTval> rtest = Vec<CTval>::Zero(N);
-        Vec<Tval> err(nZtest);
-        for(int j = 0;j<nZtest;++j){
-            //exact function @ Ztest(j)
-            Vec<CTval> v = Vec<CTval>::Zero(num_coeff);
-            v(0)=1.;    v(1)=-Ztest(j)*Ztest(j)*eps0;   v(2)=-Ztest(j)*Ztest(j)*eps(Ztest(j));
-            ftest=(M*v).transpose();
-            QRAAA::eval(repr_f,Ztest(j),rtest);
-            for(int idx = 0;idx<rtest.size();++idx){
-                rtest(idx) *= nrmVec(idx);
-            }
-            err(j) = (ftest-rtest).array().abs().maxCoeff()/ftest.array().abs().maxCoeff();
+    /*
+    validate
+    */
+    /////////////////////////////////////////////////////////////////////////////////////
+    int nZtest = 2513;   
+    Eigen::ArrayXd Ztest = Eigen::ArrayXd::LinSpaced(nZtest,0,10);
+    Vec<CTval> ftest = Vec<CTval>::Zero(N);
+    Vec<CTval> rtest = Vec<CTval>::Zero(N);
+    Vec<Tval> err(nZtest);
+    for(int j = 0;j<nZtest;++j){
+        //exact function @ Ztest(j)
+        Vec<CTval> v = Vec<CTval>::Zero(num_coeff);
+        v(0)=1.;    v(1)=-Ztest(j)*Ztest(j)*eps0;   v(2)=-Ztest(j)*Ztest(j)*eps(Ztest(j));
+        ftest=(M*v).transpose();
+        QRAAA::eval(repr_f,Ztest(j),rtest);
+        for(int idx = 0;idx<rtest.size();++idx){
+            rtest(idx) *= nrmVec(idx);
         }
-        cout<<"Maximum error = "<<err.maxCoeff()<<endl;
-
-    }else{
-        QRAAA::infoType info;
-        QRAAA::AAAopts opts;
-        opts.tol = tol;
-        opts.max_degree = 20;
-        auto repr_f=QRAAA::sv_aaa(F,Z,opts,info);
-        QRAAA::summarize(info);
-
-
-        //validate
-        int nZtest = 2513;   
-        Eigen::ArrayXd Ztest = Eigen::ArrayXd::LinSpaced(nZtest,0,10);
-        Vec<CTval> ftest = Vec<CTval>::Zero(N);
-        Vec<CTval> rtest = Vec<CTval>::Zero(N);
-        Vec<Tval> err(nZtest);
-        for(int j = 0;j<nZtest;++j){
-            //exact function @ Ztest(j)
-            Vec<CTval> v = Vec<CTval>::Zero(num_coeff);
-            v(0)=1.;    v(1)=-Ztest(j)*Ztest(j)*eps0;   v(2)=-Ztest(j)*Ztest(j)*eps(Ztest(j));
-            ftest=(M*v).transpose();
-            QRAAA::eval(repr_f,Ztest(j),rtest);
-            for(int idx = 0;idx<rtest.size();++idx){
-                rtest(idx) *= nrmVec(idx);
-            }
-            err(j) = (ftest-rtest).array().abs().maxCoeff()/ftest.array().abs().maxCoeff();
-        }
-        cout<<"Maximum error = "<<err.maxCoeff()<<endl;
+        err(j) = (ftest-rtest).array().abs().maxCoeff()/ftest.array().abs().maxCoeff();
     }
+    cout<<"Maximum error = "<<err.maxCoeff()<<endl;
+    /////////////////////////////////////////////////////////////////////////////////////
     
 
 

@@ -37,15 +37,32 @@ Tval sample(Tval dummy)
 }
 int main(int argc,char ** argv){
     
-    bool qraaa = strcmp(argv[1],"0");
-    cout<<"bool = "<<qraaa<<endl;
+    int n           = 20;
+    bool qraaa      = false;
+    int  n_cores    = 1;
+    double tol      = 1e-4;
+    if (argc>=2){
+        n = stoi(argv[1]);
+    }
+    if(argc>=3){
+        bool qraaa = (strcmp(argv[2],"1")==0);
+    }
+    if(argc>=4){
+        n_cores = std::max(1,std::min(8,stoi(argv[3])));
+    }
+    if(argc>=5){
+        tol = stod(argv[4]);
+    }
     
+    /*
+    construct F
+    */
+    //////////////////////////////////////////////////////////////
     Vec<Tval> tau = Vec<Tval>::Zero(20);
     for(int i=1;i<=tau.size();++i){
         tau(i-1)=1.*i;
     }
     int L = tau.size();
-    int n = 20;
     int nZ = 1000;
     int N = n*n;
     ArrayXd Z = ArrayXd::LinSpaced(nZ,-10., 10.);
@@ -63,70 +80,46 @@ int main(int argc,char ** argv){
         Vec<CTval> w = complex(0.,s)*E.transpose()+v.transpose()*A;
         F.row(indz).noalias() = w;
     }
-
-    double tol = 1e-4;
-    if(qraaa){
-        QRAAA::infoType info;
-        QRAAA::AAAopts opts;
-        opts.max_degree = 80;
-        opts.tol = tol;
-        auto repr_f=QRAAA::qr_aaa(F,Z,opts,info);
-        QRAAA::summarize(info);
+    //////////////////////////////////////////////////////////////
 
 
-        //validate
+    /*
+    approximate & output info
+    */
+    //////////////////////////////////////////
+    QRAAA::infoType info;
+    QRAAA::AAAopts  opts;
+    opts.tol        = tol;
+    opts.max_degree = 100;
+    opts.qr         = true;
+    opts.n_cores    = n_cores;
+    auto repr_f     = QRAAA::sv_aaa(F,Z,opts,info);
+    QRAAA::summarize(info);
+    //////////////////////////////////////////
 
-        
-        int nZtest = 2513;   
-        Eigen::ArrayXd Ztest = Eigen::ArrayXd::LinSpaced(nZtest,-10,10);
-        Vec<CTval> ftest = Vec<CTval>::Zero(N);
-        Vec<CTval> rtest = Vec<CTval>::Zero(N);
-        Vec<Tval> err(nZtest);
-        for(int j = 0;j<nZtest;++j){
-            Tval s=Ztest(j);
-            Vec<complex<Tval>> v = Vec<complex<Tval>>::Zero(n);
-            for(int l = 0;l<L;++l){
-                Tval nrm = A.row(l).reshaped(n,n).cwiseAbs().rowwise().sum().maxCoeff();
-                v(l)=exp(complex<Tval>(0.,-s*tau(l)))*pow(10.,.1*l)/nrm;
-            }
-            Vec<CTval> w = complex(0.,s)*E.transpose()+v.transpose()*A;
-            ftest = w;
-            QRAAA::eval(repr_f,Ztest(j),rtest);
-            err(j) = (ftest-rtest).array().abs().maxCoeff()/ftest.array().abs().maxCoeff();
+    /*
+    validate
+    */
+    /////////////////////////////////////////////////////////////////////////////////////
+    int nZtest = 2513;   
+    Eigen::ArrayXd Ztest = Eigen::ArrayXd::LinSpaced(nZtest,-10,10);
+    Vec<CTval> ftest = Vec<CTval>::Zero(N);
+    Vec<CTval> rtest = Vec<CTval>::Zero(N);
+    Vec<Tval> err(nZtest);
+    for(int j = 0;j<nZtest;++j){
+        Tval s=Ztest(j);
+        Vec<complex<Tval>> v = Vec<complex<Tval>>::Zero(n);
+        for(int l = 0;l<L;++l){
+            Tval nrm = A.row(l).reshaped(n,n).cwiseAbs().rowwise().sum().maxCoeff();
+            v(l)=exp(complex<Tval>(0.,-s*tau(l)))*pow(10.,.1*l)/nrm;
         }
-        cout<<"Maximum error = "<<err.maxCoeff()<<endl;
-    }else{
-        QRAAA::infoType info;
-        QRAAA::AAAopts opts;
-        opts.max_degree = 80;
-        opts.tol = tol;
-        auto repr_f=QRAAA::sv_aaa(F,Z,opts,info);
-        QRAAA::summarize(info);
-
-
-        //validate
-
-        
-        int nZtest = 2513;   
-        Eigen::ArrayXd Ztest = Eigen::ArrayXd::LinSpaced(nZtest,-10,10);
-        Vec<CTval> ftest = Vec<CTval>::Zero(N);
-        Vec<CTval> rtest = Vec<CTval>::Zero(N);
-        Vec<Tval> err(nZtest);
-        for(int j = 0;j<nZtest;++j){
-            Tval s=Ztest(j);
-            Vec<complex<Tval>> v = Vec<complex<Tval>>::Zero(n);
-            for(int l = 0;l<L;++l){
-                Tval nrm = A.row(l).reshaped(n,n).cwiseAbs().rowwise().sum().maxCoeff();
-                v(l)=exp(complex<Tval>(0.,-s*tau(l)))*pow(10.,.1*l)/nrm;
-            }
-            Vec<CTval> w = complex(0.,s)*E.transpose()+v.transpose()*A;
-            ftest = w;
-            QRAAA::eval(repr_f,Ztest(j),rtest);
-            
-            err(j) = (ftest-rtest).array().abs().maxCoeff()/ftest.array().abs().maxCoeff();
-        }
-        cout<<"Maximum error = "<<err.maxCoeff()<<endl;
+        Vec<CTval> w = complex(0.,s)*E.transpose()+v.transpose()*A;
+        ftest = w;
+        QRAAA::eval(repr_f,Ztest(j),rtest);
+        err(j) = (ftest-rtest).array().abs().maxCoeff()/ftest.array().abs().maxCoeff();
     }
+    cout<<"Maximum error = "<<err.maxCoeff()<<endl;
+    /////////////////////////////////////////////////////////////////////////////////////
 
 return 0;
 }
