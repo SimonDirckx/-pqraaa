@@ -44,12 +44,12 @@ Mat<complex<double>> F = Mat<complex<double>>::Zero(nZ,N);
 * After possibly rescaling the columns of F (application dependent, but unit norm for each column is usually a good idea), set tolerance, set max_degree, number of cores, whether to use qr (always true when n_cores>1) and compute the qr-aaa approximation
 ```
 QRAAA::infoType info;
-QRAAA::AAAopts opts;
-opts.tol = tol;
-opts.max_degree = 30;
-opts.qr = true;
-opts.n_cores = 1;
-auto repr_f=QRAAA::sv_aaa(F,Z,opts,info);
+QRAAA::AAAopts  opts;
+opts.tol        = tol;
+opts.max_degree = 20;
+opts.qr         = true;
+opts.n_cores    = n_cores;
+auto repr_f     = QRAAA::sv_aaa(F,Z,opts,info);
 ```
 * Optionally, output the info of the qr-aaa approximation
 ```
